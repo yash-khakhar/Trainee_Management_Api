@@ -3,6 +3,9 @@
 ## Technology Used
 C# And ASP.NET CORE  
 
+## Database Used  
+Entiry Framework In-Memory Database  
+
 ## How to Run
 step1: Clone the repo  
 step2: Open visual studio IDE and click on Run application  
