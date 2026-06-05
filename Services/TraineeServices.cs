@@ -8,6 +8,13 @@ namespace TraineeManagement.api.Services
     {
         private static readonly List<TraineeModel> traineeList = new List<TraineeModel>();
 
+        private TraineeModel FindTraineeById(string id)
+        {
+            var trainee = traineeList.FirstOrDefault(t => t.Id.Equals(id));
+            if (trainee == null) throw new Exception("Trainee Not Found");
+            else return trainee;
+        }
+
         public TraineeResponse AddTrainee(CreateTraineeRequest trainee)
         {
             var traineeModel = new TraineeModel(trainee.FirstName, trainee.LastName, trainee.Email, trainee.TechStack, trainee.Status);
@@ -20,17 +27,13 @@ namespace TraineeManagement.api.Services
 
         public void DeleteTraineeById(string id)
         {
-            var trainee = traineeList.FirstOrDefault(t => t.Id.Equals(id));
-            if (trainee == null) throw new Exception("Trainee Not Found");
+            var trainee = FindTraineeById(id);
             traineeList.Remove(trainee);
         }
 
         public TraineeResponse GetTraineeById(string id)
         {
-            var trainee = traineeList.FirstOrDefault(t => t.Id.Equals(id));
-
-            if (trainee == null) throw new Exception("Trainee not found");
-
+            var trainee = FindTraineeById(id);
             return TraineeModel.ToDto(trainee);
             
         }
@@ -49,8 +52,7 @@ namespace TraineeManagement.api.Services
 
         public TraineeResponse UpdateTrainee(UpdateTraineeRequest updateTraineeRequest)
         {
-            var trainee = traineeList.FirstOrDefault(t => t.Id.Equals(updateTraineeRequest.Id));
-            if (trainee == null) throw new Exception("Trainee Not Found");
+            var trainee = FindTraineeById(updateTraineeRequest.Id);
 
             if (updateTraineeRequest.FirstName != null) trainee.FirstName = updateTraineeRequest.FirstName;
 
