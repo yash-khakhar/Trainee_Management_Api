@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TraineeManagement.api.DTO.TraineeDto;
+﻿using TraineeManagement.api.DTO.TraineeDto;
 
 namespace TraineeManagement.api.repository
 {
