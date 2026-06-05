@@ -72,4 +72,6 @@ step2: Open visual studio IDE and click on Run application
 ## Challenges Faced
 1. I Faced challenges while creating the api. To overcome challenges i used help of official documentation of .NET Core and C#  
 References:  
-1. https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-10.0
+1. https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-10.0  
+2. https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?view=aspnetcore-10.0  
+3. https://learn.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-10.0
