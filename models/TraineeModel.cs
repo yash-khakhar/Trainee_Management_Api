@@ -17,8 +17,7 @@ namespace TraineeManagement.api.models
             Status = status;
         }
 
-        [Required]
-        public string Id { get; set; }
+        public int Id { get; set; }
         
         [Required]
         [StringLength(50, ErrorMessage = "First Name cannot be more than 50 characters")]

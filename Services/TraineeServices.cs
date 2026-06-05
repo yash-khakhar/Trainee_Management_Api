@@ -1,4 +1,7 @@
-﻿using TraineeManagement.api.DTO.TraineeDto;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TraineeManagement.api.Data;
+using TraineeManagement.api.DTO.TraineeDto;
 using TraineeManagement.api.models;
 using TraineeManagement.api.repository;
 
@@ -6,53 +9,66 @@ namespace TraineeManagement.api.Services
 {
     public class TraineeServices : ITraineeService
     {
-        private static readonly List<TraineeModel> traineeList = new List<TraineeModel>();
+        private AppDbContext _context;
 
-        private TraineeModel FindTraineeById(string id)
+        public TraineeServices(AppDbContext context)
         {
-            var trainee = traineeList.FirstOrDefault(t => t.Id.Equals(id));
+            _context = context;
+        }
+
+        private async Task<TraineeModel> FindTraineeById(int id)
+        {
+            var trainee = await _context.Trainees.FindAsync(id);
             if (trainee == null) throw new Exception("Trainee Not Found");
             else return trainee;
         }
 
-        public TraineeResponse AddTrainee(CreateTraineeRequest trainee)
+        public async Task<TraineeResponse> AddTrainee(CreateTraineeRequest trainee)
         {
             var traineeModel = new TraineeModel(trainee.FirstName, trainee.LastName, trainee.Email, trainee.TechStack, trainee.Status);
             traineeModel.CreatedAt = DateTime.UtcNow;
             traineeModel.UpdatedAt = DateTime.UtcNow;
-            traineeModel.Id = Guid.NewGuid().ToString();
-            traineeList.Add(traineeModel);
+            
+            _context.Trainees.Add(traineeModel);
+            await _context.SaveChangesAsync();
+
             return TraineeModel.ToDto(traineeModel);
         }
 
-        public void DeleteTraineeById(string id)
+        public async void DeleteTraineeById(int id)
         {
-            var trainee = FindTraineeById(id);
-            traineeList.Remove(trainee);
+            var trainee = await FindTraineeById(id);
+            _context.Trainees.Remove(trainee);
+            await _context.SaveChangesAsync();
+
         }
 
-        public TraineeResponse GetTraineeById(string id)
+        public async Task<TraineeResponse> GetTraineeById(int id)
         {
-            var trainee = FindTraineeById(id);
-            return TraineeModel.ToDto(trainee);
+ 
+            var trainee = await _context.Trainees
+             .Where(p => p.Id == id)
+            .Select(p => new TraineeResponse(p.Id, p.FirstName, p.LastName, p.Email, p.TechStack, p.Status, p.CreatedAt, p.UpdatedAt))
+             .FirstOrDefaultAsync();
+
+            if (trainee == null) throw new Exception("Trainee Not Found");
+
+            return trainee;
             
         }
 
-        public List<TraineeResponse> GetTraineeList()
+        public async Task<IEnumerable<TraineeResponse>> GetTraineeList()
         {
-            List<TraineeResponse> traineeResponseDto = new List<TraineeResponse>();
+            var traineeList = await _context.Trainees
+            .Select(p => new TraineeResponse(p.Id, p.FirstName, p.LastName, p.Email, p.TechStack, p.Status, p.CreatedAt, p.UpdatedAt))
+            .ToListAsync();
 
-            foreach (TraineeModel model in traineeList)
-            {
-                traineeResponseDto.Add(TraineeModel.ToDto(model));
-            }
-
-            return traineeResponseDto;
+            return traineeList;
         }
 
-        public TraineeResponse UpdateTrainee(UpdateTraineeRequest updateTraineeRequest)
+        public async Task<TraineeResponse> UpdateTrainee(UpdateTraineeRequest updateTraineeRequest)
         {
-            var trainee = FindTraineeById(updateTraineeRequest.Id);
+            var trainee = await FindTraineeById(updateTraineeRequest.Id);
 
             if (updateTraineeRequest.FirstName != null) trainee.FirstName = updateTraineeRequest.FirstName;
 
@@ -65,6 +81,8 @@ namespace TraineeManagement.api.Services
             if (updateTraineeRequest.TechStack != null) trainee.TechStack = updateTraineeRequest.TechStack;
 
             trainee.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
 
             return TraineeModel.ToDto(trainee);
         }

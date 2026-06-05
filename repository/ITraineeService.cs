@@ -1,14 +1,15 @@
-﻿using TraineeManagement.api.DTO.TraineeDto;
+﻿using Microsoft.AspNetCore.Mvc;
+using TraineeManagement.api.DTO.TraineeDto;
 
 namespace TraineeManagement.api.repository
 {
     public interface ITraineeService
     {
-        public List<TraineeResponse> GetTraineeList();
-        public TraineeResponse GetTraineeById(string id);
-        public TraineeResponse AddTrainee(CreateTraineeRequest trainee);
-        public TraineeResponse UpdateTrainee(UpdateTraineeRequest updateTraineeRequest);
-        public void DeleteTraineeById(string id);
+        public Task<IEnumerable<TraineeResponse>> GetTraineeList();
+        public Task<TraineeResponse> GetTraineeById(int id);
+        public Task<TraineeResponse> AddTrainee(CreateTraineeRequest trainee);
+        public Task<TraineeResponse> UpdateTrainee(UpdateTraineeRequest updateTraineeRequest);
+        public void DeleteTraineeById(int id);
 
     }
 }

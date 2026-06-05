@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TraineeManagement.api.DTO.TraineeDto;
-using TraineeManagement.api.models;
 using TraineeManagement.api.repository;
-using TraineeManagement.api.Services;
 
 namespace TraineeManagement.api.Controllers
 {
@@ -14,7 +11,6 @@ namespace TraineeManagement.api.Controllers
     {
 
         private readonly ITraineeService _traineeServices;
-
         public TraineeController(ITraineeService traineeServices)
         {
             _traineeServices = traineeServices;
@@ -22,11 +18,11 @@ namespace TraineeManagement.api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(TraineeResponse[]), StatusCodes.Status200OK)]
-        public ActionResult<TraineeResponse[]> ListAllTrainee()
+        public async Task<ActionResult<TraineeResponse[]>> ListAllTrainee()
         {
             try
             {
-                return Ok(_traineeServices.GetTraineeList());
+                return Ok(await _traineeServices.GetTraineeList());
             }
             catch (Exception ex) 
             {
@@ -36,11 +32,11 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetTraineeById")]
-        public ActionResult<TraineeResponse> GetTraineeById(string id)
+        public async Task<ActionResult<TraineeResponse>> GetTraineeById(int id)
         {
             try
             {
-                return Ok(_traineeServices.GetTraineeById(id));
+                return Ok(await _traineeServices.GetTraineeById(id));
             }
             catch(Exception ex)
             {
@@ -50,7 +46,7 @@ namespace TraineeManagement.api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(TraineeResponse), StatusCodes.Status201Created)]
-        public ActionResult<TraineeResponse> AddTrainee([FromBody] CreateTraineeRequest trainee)
+        public async Task<ActionResult<TraineeResponse>> AddTrainee([FromBody] CreateTraineeRequest trainee)
         {
 
             if (trainee == null)
@@ -60,7 +56,7 @@ namespace TraineeManagement.api.Controllers
 
             try
             {
-                return _traineeServices.AddTrainee(trainee);
+                return await _traineeServices.AddTrainee(trainee);
             }
             catch (Exception ex)
             {
@@ -71,12 +67,12 @@ namespace TraineeManagement.api.Controllers
 
         [HttpPut]
         [ProducesResponseType(typeof(TraineeResponse), StatusCodes.Status200OK)]
-        public ActionResult<TraineeResponse> UpdateTrainee([FromBody] UpdateTraineeRequest updateTraineeRequest)
+        public async Task<ActionResult<TraineeResponse>> UpdateTrainee([FromBody] UpdateTraineeRequest updateTraineeRequest)
         {
 
             try
             {
-                return Ok(_traineeServices.UpdateTrainee(updateTraineeRequest));
+                return Ok(await _traineeServices.UpdateTrainee(updateTraineeRequest));
             }
             catch (Exception ex) 
             {
@@ -85,7 +81,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteTraineeById(string id)
+        public async Task<IActionResult> DeleteTraineeById(int id)
         {
             try
             {

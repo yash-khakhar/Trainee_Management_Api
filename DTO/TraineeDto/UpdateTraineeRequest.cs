@@ -6,7 +6,7 @@ namespace TraineeManagement.api.DTO.TraineeDto
     public class UpdateTraineeRequest
     {
         [Required]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [StringLength(50, ErrorMessage = "First Name cannot be more than 50 characters")]
         public string? FirstName { get; set; }
