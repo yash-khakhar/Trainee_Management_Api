@@ -16,7 +16,8 @@ step2: Open visual studio IDE and click on Run application
     }  
   
 2. [GET] /api/Trainee  
-    Response: [  
+    Response:  
+    [  
     {  
 
         "id": "string",  
@@ -28,7 +29,45 @@ step2: Open visual studio IDE and click on Run application
         "createdAt": "2026-06-05T08:56:33.575Z",  
         "updatedAt": "2026-06-05T08:56:33.575Z"  
     }  
-  ]
+  ]  
+  
+3. [POST] /api/Trainee  
+    Request Body:  
+    {  
+        "firstName": "string",  
+        "lastName": "string",  
+        "email": "user@example.com",  
+        "techStack": "string",  
+        "status": "ACTIVE"  
+    }  
+  
+4. [PUT] /api/Trainee  
+    Request Body:  
+    {  
+        "id": "string",  
+        "firstName": "string",  
+        "lastName": "string",  
+        "email": "user@example.com",  
+        "techStack": "string",  
+        "status": "ACTIVE"  
+    }  
+  
+5. [GET] /api/Trainee/{id}  
+    Request Path Param: id  
+    Response:  
+     {  
+        "id": "string",  
+        "firstName": "string",  
+        "lastName": "string",  
+        "email": "user@example.com",  
+        "techStack": "string",  
+        "status": "ACTIVE"  
+    }  
+  
+6. [DELETE] /api/Trainee/{id}  
+    Request Path Param: id  
+    Response: 204 No Content
+
 
 ## Challenges Faced
 1. I Faced challenges while creating the api. To overcome challenges i used help of official documentation of .NET Core and C#  
