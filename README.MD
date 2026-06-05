@@ -11,9 +11,24 @@ step2: Open visual studio IDE and click on Run application
 1. [GET] /api/Health  
     Response: {  
         "status": "string",  
-        "applicationName": "string",
+        "applicationName": "string",  
         "time": "2026-06-05T08:50:07.401Z"  
-    }
+    }  
+  
+2. [GET] /api/Trainee  
+    Response: [  
+    {  
+
+        "id": "string",  
+        "firstName": "string",  
+        "lastName": "string",  
+        "email": "string",  
+        "techStack": "string",  
+        "status": "ACTIVE",  
+        "createdAt": "2026-06-05T08:56:33.575Z",  
+        "updatedAt": "2026-06-05T08:56:33.575Z"  
+    }  
+  ]
 
 ## Challenges Faced
 1. I Faced challenges while creating the api. To overcome challenges i used help of official documentation of .NET Core and C#  
