@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using TraineeManagement.api.DTO.TraineeDto;
 using TraineeManagement.api.models;
+using TraineeManagement.api.repository;
+using TraineeManagement.api.Services;
 
 namespace TraineeManagement.api.Controllers
 {
@@ -8,47 +12,92 @@ namespace TraineeManagement.api.Controllers
     [ApiController]
     public class TraineeController : ControllerBase
     {
-        private static readonly List<TraineeModel> traineeList = new List<TraineeModel>();
+
+        private readonly ITraineeService _traineeServices;
+
+        public TraineeController(ITraineeService traineeServices)
+        {
+            _traineeServices = traineeServices;
+        }
 
         [HttpGet]
-        [ProducesResponseType(typeof(TraineeModel[]), StatusCodes.Status200OK)]
-        public ActionResult<TraineeModel[]> ListAllTrainee()
+        [ProducesResponseType(typeof(TraineeResponse[]), StatusCodes.Status200OK)]
+        public ActionResult<TraineeResponse[]> ListAllTrainee()
         {
-            return Ok(traineeList);
+            try
+            {
+                return Ok(_traineeServices.GetTraineeList());
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 
         [HttpGet("{id}", Name = "GetTraineeById")]
-        public ActionResult<TraineeModel> GetTraineeById(int id)
+        public ActionResult<TraineeResponse> GetTraineeById(string id)
         {
-            var trainee = traineeList.FirstOrDefault(t => t.Id == id);
-            if (trainee == null) return NotFound();
-            return Ok(trainee);
+            try
+            {
+                return Ok(_traineeServices.GetTraineeById(id));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(TraineeModel), StatusCodes.Status201Created)]
-        public ActionResult<TraineeModel> AddTrainee([FromBody] TraineeModel trainee)
-        {   
+        [ProducesResponseType(typeof(TraineeResponse), StatusCodes.Status201Created)]
+        public ActionResult<TraineeResponse> AddTrainee([FromBody] CreateTraineeRequest trainee)
+        {
 
-            if(trainee == null)
+            if (trainee == null)
             {
                 return BadRequest();
             }
 
-            trainee.Id = traineeList.Count + 1;
-            trainee.CreatedAt = DateTime.UtcNow;
-            trainee.UpdatedAt = DateTime.UtcNow;
-            traineeList.Add(trainee);
-
-            return CreatedAtAction(
-                nameof(GetTraineeById),
-                new { id = trainee.Id },
-                trainee
-            );
+            try
+            {
+                return _traineeServices.AddTrainee(trainee);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 
+        [HttpPut]
+        [ProducesResponseType(typeof(TraineeResponse), StatusCodes.Status200OK)]
+        public ActionResult<TraineeResponse> UpdateTrainee([FromBody] UpdateTraineeRequest updateTraineeRequest)
+        {
+
+            try
+            {
+                return Ok(_traineeServices.UpdateTrainee(updateTraineeRequest));
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTraineeById(string id)
+        {
+            try
+            {
+                _traineeServices.DeleteTraineeById(id);
+                return NoContent();
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
 
     }
 }
