@@ -33,8 +33,12 @@ builder.Services.AddControllers()
 
 builder.Services.AddScoped<ITraineeService, TraineeServices>();
 
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseInMemoryDatabase("TraineeManagementDb"));
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseInMemoryDatabase("TraineeManagementDb"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 var app = builder.Build();
 

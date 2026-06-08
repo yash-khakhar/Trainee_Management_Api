@@ -18,7 +18,7 @@ namespace TraineeManagement.api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(TraineeResponse[]), StatusCodes.Status200OK)]
-        public async Task<ActionResult<TraineeResponse[]>> ListAllTrainee([FromQuery(Name="searchKeyword")] string searchKeyword )
+        public async Task<ActionResult<TraineeResponse[]>> ListAllTrainee([FromQuery(Name="searchKeyword")] string? searchKeyword = null )
         {
             try
             {
@@ -92,8 +92,15 @@ namespace TraineeManagement.api.Controllers
         {
             try
             {
-                _traineeServices.DeleteTraineeById(id);
-                return NoContent();
+                bool isTraineeDeleted = await _traineeServices.DeleteTraineeById(id);
+                if (isTraineeDeleted)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    throw new Exception("Trainee Not Found");
+                }
             }
             catch (Exception ex) 
             {

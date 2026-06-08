@@ -41,12 +41,13 @@ namespace TraineeManagement.api.Services
             return TraineeModel.ToDto(traineeModel);
         }
 
-        public async void DeleteTraineeById(int id)
+        public async Task<bool> DeleteTraineeById(int id)
         {
-            var trainee = await FindTraineeById(id);
+            var trainee = await _context.Trainees.FindAsync(id);
+            if (trainee == null) return false;
             _context.Trainees.Remove(trainee);
             await _context.SaveChangesAsync();
-
+            return true;
         }
 
         public async Task<TraineeResponse> GetTraineeById(int id)
