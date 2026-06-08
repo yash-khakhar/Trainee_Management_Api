@@ -4,7 +4,7 @@
 C# And ASP.NET CORE  
 
 ## Database Used  
-Entiry Framework In-Memory Database  
+SQL SERVER with Entity Framework ORM    
 
 ## How to Run
 step1: Clone the repo  git  
