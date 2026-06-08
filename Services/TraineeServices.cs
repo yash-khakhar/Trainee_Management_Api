@@ -25,7 +25,13 @@ namespace TraineeManagement.api.Services
 
         public async Task<TraineeResponse> AddTrainee(CreateTraineeRequest trainee)
         {
-            var traineeModel = new TraineeModel(trainee.FirstName, trainee.LastName, trainee.Email, trainee.TechStack, trainee.Status);
+            var traineeModel = new TraineeModel(
+                    trainee.FirstName.ToLower(), 
+                    trainee.LastName.ToLower(), 
+                    trainee.Email.ToLower(), 
+                    trainee.TechStack.ToLower(), 
+                    trainee.Status
+                );
             traineeModel.CreatedAt = DateTime.UtcNow;
             traineeModel.UpdatedAt = DateTime.UtcNow;
             
@@ -85,6 +91,31 @@ namespace TraineeManagement.api.Services
             await _context.SaveChangesAsync();
 
             return TraineeModel.ToDto(trainee);
+        }
+
+        public async Task<IEnumerable<TraineeResponse>> SearchTrainee(string searchKeyword)
+        {
+            var traineeList = await _context.Trainees
+                .Where(
+                    trainee => trainee.FirstName.Contains(searchKeyword) || 
+                    trainee.LastName.Contains(searchKeyword) || 
+                    trainee.Email.Contains(searchKeyword) || 
+                    trainee.TechStack.Contains(searchKeyword
+                ))
+                .Select(trainee => 
+                    new TraineeResponse(
+                        trainee.Id, 
+                        trainee.FirstName, 
+                        trainee.LastName, 
+                        trainee.Email, 
+                        trainee.TechStack,
+                        trainee.Status,
+                        trainee.CreatedAt,
+                        trainee.UpdatedAt
+                     ))
+                .ToListAsync();
+
+            return traineeList;
         }
     }
 }

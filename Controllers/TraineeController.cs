@@ -18,11 +18,18 @@ namespace TraineeManagement.api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(TraineeResponse[]), StatusCodes.Status200OK)]
-        public async Task<ActionResult<TraineeResponse[]>> ListAllTrainee()
+        public async Task<ActionResult<TraineeResponse[]>> ListAllTrainee([FromQuery(Name="searchKeyword")] string searchKeyword )
         {
             try
             {
-                return Ok(await _traineeServices.GetTraineeList());
+                if(searchKeyword != null)
+                {
+                    return Ok(await _traineeServices.SearchTrainee(searchKeyword.ToLower()));
+                }
+                else
+                {
+                    return Ok(await _traineeServices.GetTraineeList());
+                }
             }
             catch (Exception ex) 
             {

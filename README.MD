@@ -18,7 +18,7 @@ step2: Open visual studio IDE and click on Run application
         "time": "2026-06-05T08:50:07.401Z"  
     }  
   
-2. [GET] /api/Trainee  
+2. [GET] /api/Trainee?searchKeyword=string  
     Response:  
     [  
     {  

@@ -11,5 +11,7 @@ namespace TraineeManagement.api.repository
         public Task<TraineeResponse> UpdateTrainee(UpdateTraineeRequest updateTraineeRequest);
         public void DeleteTraineeById(int id);
 
+        public Task<IEnumerable<TraineeResponse>> SearchTrainee(string searchKeyword);
+
     }
 }

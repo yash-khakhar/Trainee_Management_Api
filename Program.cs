@@ -11,6 +11,19 @@ builder.Services.AddOpenApi();
 builder.Services.AddOpenApiDocument();
 builder.Services.AddValidation();
 
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: myAllowSpecificOrigins,
+        policy =>
+            {
+                policy.WithOrigins("http://localhost:5220")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+});
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
