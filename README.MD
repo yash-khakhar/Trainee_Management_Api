@@ -7,7 +7,7 @@ C# And ASP.NET CORE
 Entiry Framework In-Memory Database  
 
 ## How to Run
-step1: Clone the repo  
+step1: Clone the repo  git  
 step2: Open visual studio IDE and click on Run application  
 
 ## API LIST  
