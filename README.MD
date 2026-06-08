@@ -8,7 +8,11 @@ SQL SERVER with Entity Framework ORM
 
 ## How to Run
 step1: Clone the repo  git  
-step2: Open visual studio IDE and click on Run application  
+step2: Open Project in visual studio IDE  
+step3: Run following commands for database migration .NET CLI  
+    command 1: Add-Migration InitialSqlServerMigration  
+    command 2: update-database  
+step4: click on Run application  
 
 ## API LIST  
 1. [GET] /api/Health  
