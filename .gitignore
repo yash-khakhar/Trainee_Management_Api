@@ -52,3 +52,4 @@ log.txt
 *.log
 
 Migrations/
+appsettings.json
