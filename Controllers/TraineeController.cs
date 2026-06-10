@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TraineeManagement.api.DTO.TraineeDto;
+using TraineeManagement.api.Enum.Trainee;
 using TraineeManagement.api.Enum.User;
 using TraineeManagement.api.repository;
 
@@ -8,26 +9,38 @@ namespace TraineeManagement.api.Controllers
 {
  
     [Route("api/[controller]")]
-    [Authorize(Roles = nameof(UserRolesEnum.ADMIN))]
+    [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
     [ApiController]
     public class TraineeController : ControllerBase
     {
 
         private readonly ITraineeService _traineeServices;
-        public TraineeController(ITraineeService traineeServices)
+        private readonly ILogger<TraineeController> _logger;
+        public TraineeController(ITraineeService traineeServices, ILogger<TraineeController> logger)
         {
             _traineeServices = traineeServices;
+            _logger = logger;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(TraineeResponse[]), StatusCodes.Status200OK)]
-        public async Task<ActionResult<TraineeResponse[]>> ListAllTrainee([FromQuery(Name="searchKeyword")] string? searchKeyword = null )
+        public async Task<IActionResult> ListAllTrainee(
+            [FromQuery(Name = "pageNumber")] int pageNumber = 0,
+            [FromQuery(Name = "pageSize")] int pageSize = 0,
+            [FromQuery(Name = "search")] string? search = null,
+            [FromQuery(Name = "status")] TraineeStatusEnum status = TraineeStatusEnum.ACTIVE
+        )
         {
             try
             {
-                if(searchKeyword != null)
+                if(search != null && pageNumber != 0 && pageSize != 0)
                 {
-                    return Ok(await _traineeServices.SearchTrainee(searchKeyword.ToLower()));
+                    TraineeSearchResultDto traineeSearchResultDto =  await _traineeServices.SearchWithPagination(pageNumber, pageSize, search.ToLower(), status);
+                    
+                    return Ok(traineeSearchResultDto);
+
+                } else if(search != null)
+                {
+                    return Ok(await _traineeServices.SearchTrainee(search.ToLower()));
                 }
                 else
                 {
@@ -36,6 +49,7 @@ namespace TraineeManagement.api.Controllers
             }
             catch (Exception ex) 
             {
+                _logger.LogInformation($"Exception in Seaching Trainee: {ex.Message}");
                 return BadRequest(ex.Message);
             }
 
@@ -50,6 +64,7 @@ namespace TraineeManagement.api.Controllers
             }
             catch(Exception ex)
             {
+                _logger.LogInformation($"Exception in Fetching Trainee by Id: {ex.Message}");
                 return BadRequest(ex.Message);
             }
         }
@@ -66,10 +81,16 @@ namespace TraineeManagement.api.Controllers
 
             try
             {
-                return await _traineeServices.AddTrainee(trainee);
+                TraineeResponse traineeRespone =  await _traineeServices.AddTrainee(trainee);
+
+                _logger.LogInformation($"Trainee Creation: {traineeRespone.FirstName} created!!");
+
+                return traineeRespone;
+
             }
             catch (Exception ex)
             {
+                _logger.LogInformation($"Exception in Trainee Creation: {ex.Message}");
                 return BadRequest(ex.Message);
             }
 
@@ -82,10 +103,15 @@ namespace TraineeManagement.api.Controllers
 
             try
             {
-                return Ok(await _traineeServices.UpdateTrainee(updateTraineeRequest));
+                TraineeResponse traineeRespone = await _traineeServices.UpdateTrainee(updateTraineeRequest);
+
+                _logger.LogInformation($"Trainee Updation: {traineeRespone.FirstName} updated!!");
+
+                return traineeRespone;
             }
             catch (Exception ex) 
             {
+                _logger.LogInformation($"Exception in Trainee Updation: {ex.Message}");
                 return BadRequest(ex.Message);
             }
         }
@@ -98,6 +124,7 @@ namespace TraineeManagement.api.Controllers
                 bool isTraineeDeleted = await _traineeServices.DeleteTraineeById(id);
                 if (isTraineeDeleted)
                 {
+                    _logger.LogInformation($"Trainee Deleted: Trainee Id: {id}");
                     return NoContent();
                 }
                 else
@@ -107,6 +134,7 @@ namespace TraineeManagement.api.Controllers
             }
             catch (Exception ex) 
             {
+                _logger.LogInformation($"Exception in Trainee Deletion: {ex.Message}");
                 return BadRequest(ex.Message);
             }
             

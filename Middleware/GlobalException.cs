@@ -1,4 +1,6 @@
-﻿namespace TraineeManagement.api.Middleware
+﻿using TraineeManagement.api.CustomException;
+
+namespace TraineeManagement.api.Middleware
 {
     public class GlobalException
     {
@@ -11,6 +13,7 @@
 
         public async Task InvokeAsync(HttpContext context)
         {
+
             // for running next middleware down the pipeline
             await _next(context);
 
@@ -18,12 +21,13 @@
             if (context.Response.StatusCode == StatusCodes.Status403Forbidden && !context.Response.HasStarted)
             {
                 context.Response.ContentType = "application/json";
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
 
                 var payload = new
                 {
-                    title = "Forbidden Action",
-                    status = 403,
-                    detail = "You are forbidden to access the resource."
+                    ErrorType = "Forbidden Action",
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "You are forbidden to access the resource."
                 };
 
                 await context.Response.WriteAsJsonAsync(payload);
@@ -32,12 +36,13 @@
             if (context.Response.StatusCode == StatusCodes.Status401Unauthorized && !context.Response.HasStarted)
             {
                 context.Response.ContentType = "application/json";
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
                 var payload = new
                 {
-                    title = "Unauthorized Action",
-                    status = 401,
-                    detail = "You are unauthorized to access."
+                    ErrorType = "Unauthorized Action",
+                    StatusCode = StatusCodes.Status401Unauthorized,
+                    Message = "You are unauthorized to access."
                 };
 
                 await context.Response.WriteAsJsonAsync(payload);

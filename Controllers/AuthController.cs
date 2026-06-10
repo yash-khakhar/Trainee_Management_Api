@@ -9,10 +9,12 @@ namespace TraineeManagement.api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IUserService userService)
+        public AuthController(IUserService userService, ILogger<AuthController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
@@ -23,16 +25,23 @@ namespace TraineeManagement.api.Controllers
 
                 if (user == null)
                 {
+                    _logger.LogInformation($"Exception in User Creation: Invalid input provided by user");
                     return BadRequest("Please provide correct input");
                 }
 
-                return await _userService.RegisterUser(user);
+                UserResponse userResponse =  await _userService.RegisterUser(user);
+                
+                _logger.LogInformation($"Register: {userResponse.UserName} is registered!!");
+                
+                return userResponse;
             }
 
             catch (Exception ex)
             {
 
                 var errorResponse = new { message = ex.Message };
+
+                _logger.LogInformation($"Exception in User Creation: {ex.Message}");
 
                 return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
             }
@@ -48,18 +57,23 @@ namespace TraineeManagement.api.Controllers
 
                 if (user == null)
                 {
+                    _logger.LogInformation($"Exception in User Login: Invalid Credentials");
                     return BadRequest("Please provide correct input");
                 }
 
                 var userLoginResponse = await _userService.Login(user);
 
-                return Ok(userLoginResponse);
+                _logger.LogInformation($"Login: {userLoginResponse.User.UserName} is logged in!!");
+
+                return userLoginResponse;
             }
 
             catch (Exception ex)
             {
 
                 var errorResponse = new { message = ex.Message };
+
+                _logger.LogInformation($"Exception in User Login: {ex.Message}");
 
                 return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
             }

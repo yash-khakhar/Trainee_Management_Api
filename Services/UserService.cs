@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System.Text;
+using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.UserDto;
+using TraineeManagement.api.Helper;
 using TraineeManagement.api.Models;
 using TraineeManagement.api.Repository;
 
@@ -31,47 +29,10 @@ namespace TraineeManagement.api.Services
             return user;
         }
 
-        private string GenerateJwtToken(UserModel user)
+        private async Task<bool> isUserPresent(string username)
         {
-            var tokenHandler = new JsonWebTokenHandler();
-
-            var jwtSettings = _config.GetSection("JwtSettings");
-
-            if (jwtSettings == null) throw new Exception("Jwt is not configured!");
-
-            var secretKey = jwtSettings["SecretKey"];
-
-            var key = Encoding.UTF8.GetBytes(secretKey!);
-
-            var expiry = jwtSettings["ExpiryMinutes"];
-
-            var issuer = jwtSettings["Issuer"];
-
-            var audience = jwtSettings["Audience"];
-
-            if(issuer == null || audience == null || expiry == null || secretKey == null) throw new Exception("Jwt is not configured");
-
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
-            };
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(double.Parse(expiry)),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature
-                ),
-                Issuer = issuer,
-                Audience = audience
-            };
-
-            return tokenHandler.CreateToken(tokenDescriptor);
-
+            return _context.Users.Any(u => u.UserName.Equals(username));
+            
         }
 
         public async Task<UserLoginResponse> Login(UserLoginRequestDto userDto)
@@ -79,12 +40,12 @@ namespace TraineeManagement.api.Services
 
             UserModel user = await FindByUsername(userDto.UserName);
 
-            if (!_passwordService.VerifyPassword(userDto.Password, user.PasswordHash))
+            if (!await _passwordService.VerifyPassword(userDto.Password, user))
             {
                 throw new Exception("Invalid username or password");
             }
 
-            string jwtToken = GenerateJwtToken(user);
+            string jwtToken = JwtHelper.GenerateJwtToken(user, _config);
 
             var jwtSettings = _config.GetSection("JwtSettings");
 
@@ -96,6 +57,12 @@ namespace TraineeManagement.api.Services
 
         public async Task<UserResponse> RegisterUser(CreateUserRequest newUser)
         {
+
+            if (await isUserPresent(newUser.Username))
+            {
+                throw new DuplicateUsernameException($"The username '{newUser.Username}' is already taken.");
+            }
+
             UserModel userModel = new UserModel(
                      newUser.Username,
                      newUser.Email,

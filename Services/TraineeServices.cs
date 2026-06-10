@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.TraineeDto;
+using TraineeManagement.api.Enum.Trainee;
+using TraineeManagement.api.Enum.User;
 using TraineeManagement.api.models;
 using TraineeManagement.api.repository;
 
@@ -117,6 +119,39 @@ namespace TraineeManagement.api.Services
                 .ToListAsync();
 
             return traineeList;
+        }
+
+        public async Task<TraineeSearchResultDto> SearchWithPagination(int pageNumber, int pageSize, string search, TraineeStatusEnum role)
+        {
+
+            int totalRecords = await _context.Trainees.CountAsync();
+
+            int totalPages = (totalRecords + pageSize - 1) / pageSize;
+
+            int skip = pageSize * pageNumber - pageSize;
+
+            var traineeList = await _context.Trainees
+                .Skip(skip)
+                .Take(pageSize)
+                .Where(
+                    trainee => trainee.FirstName.Contains(search) &&
+                    trainee.Status.Equals(role)
+                )
+                .Select(trainee =>
+                    new TraineeResponse(
+                        trainee.Id,
+                        trainee.FirstName,
+                        trainee.LastName,
+                        trainee.Email,
+                        trainee.TechStack,
+                        trainee.Status,
+                        trainee.CreatedAt,
+                        trainee.UpdatedAt
+                        )
+                ).ToListAsync();
+
+            return new TraineeSearchResultDto(pageNumber, pageSize, totalRecords, traineeList);
+
         }
     }
 }

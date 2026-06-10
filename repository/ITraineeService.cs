@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TraineeManagement.api.DTO.TraineeDto;
+﻿using TraineeManagement.api.DTO.TraineeDto;
+using TraineeManagement.api.Enum.Trainee;
 
 namespace TraineeManagement.api.repository
 {
@@ -11,6 +11,7 @@ namespace TraineeManagement.api.repository
         public Task<TraineeResponse> UpdateTrainee(UpdateTraineeRequest updateTraineeRequest);
         public Task<bool> DeleteTraineeById(int id);
         public Task<IEnumerable<TraineeResponse>> SearchTrainee(string searchKeyword);
+        public Task<TraineeSearchResultDto> SearchWithPagination(int pageNumber, int pageSize, string search, TraineeStatusEnum role);
 
     }
 }

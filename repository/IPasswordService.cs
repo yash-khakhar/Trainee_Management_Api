@@ -1,9 +1,12 @@
-﻿namespace TraineeManagement.api.Repository
+﻿
+using TraineeManagement.api.Models;
+
+namespace TraineeManagement.api.Repository
 {
     public interface IPasswordService
     {
         string HashPassword(string password);
-        bool VerifyPassword(string password, string hashedPassword);
+        Task<bool> VerifyPassword(string password, UserModel user);
 
     }
 }
