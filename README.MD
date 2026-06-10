@@ -4,17 +4,17 @@
 C# And ASP.NET CORE  
 
 ## Database Used  
-SQL SERVER with Entity Framework ORM    
+MYSQL DB with Entity Framework ORM  
 
 ## How to Run
 step1: Clone the repo  git  
 step2: Open Project in visual studio IDE  
 step3: Run following commands for database migration .NET CLI  
-    command 1: Add-Migration InitialSqlServerMigration  
+    command 1: Add-Migration InitialMySQL    
     command 2: update-database  
 step4: click on Run application  
 
-## API LIST  
+## API LIST For Trainee  
 1. [GET] /api/Health  
     Response: {  
         "status": "string",  
@@ -73,8 +73,35 @@ step4: click on Run application
   
 6. [DELETE] /api/Trainee/{id}  
     Request Path Param: id  
-    Response: 204 No Content
+    Response: 204 No Content  
 
+## API LIST For Users  
+1. [POST] /api/Auth/register  
+    Request body:  
+    {  
+        "username" : string,  
+        "email": string,  
+        "password": string,  
+        "role": "ADMIN || TRAINEE || MENTOR"  
+    }  
+    Response:  
+    {  
+        "id": int,  
+        "username": string,  
+        "role": string  
+    }  
+
+2. [POST] /api/Auth/login  
+    Request body:  
+    {  
+        "username": string,  
+        "password": string  
+    }  
+
+## JWT Usage instruction  
+-> For accessing any /api/Trainee api, you need jwt token  
+-> To get jwt token, you need to login and provide correct username and password.  
+-> Login credentials will work if you are registed, if not then you need to register first using /api/Register api.  
 
 ## Challenges Faced
 1. I Faced challenges while creating the api. To overcome challenges i used help of official documentation of .NET Core and C#  

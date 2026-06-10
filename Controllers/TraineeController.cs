@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TraineeManagement.api.DTO.TraineeDto;
+using TraineeManagement.api.Enum.User;
 using TraineeManagement.api.repository;
 
 namespace TraineeManagement.api.Controllers
 {
  
     [Route("api/[controller]")]
+    [Authorize(Roles = nameof(UserRolesEnum.ADMIN))]
     [ApiController]
     public class TraineeController : ControllerBase
     {

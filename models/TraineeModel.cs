@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using TraineeManagement.api.DTO.TraineeDto;
 using TraineeManagement.api.Enum.Trainee;
 using TraineeManagement.api.repository;
@@ -17,6 +16,7 @@ namespace TraineeManagement.api.models
             Status = status;
         }
 
+        [Key]
         public int Id { get; set; }
         
         [Required]

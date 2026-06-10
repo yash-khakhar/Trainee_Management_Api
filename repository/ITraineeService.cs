@@ -10,7 +10,6 @@ namespace TraineeManagement.api.repository
         public Task<TraineeResponse> AddTrainee(CreateTraineeRequest trainee);
         public Task<TraineeResponse> UpdateTrainee(UpdateTraineeRequest updateTraineeRequest);
         public Task<bool> DeleteTraineeById(int id);
-
         public Task<IEnumerable<TraineeResponse>> SearchTrainee(string searchKeyword);
 
     }

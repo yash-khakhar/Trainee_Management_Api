@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TraineeManagement.api.models;
+using TraineeManagement.api.Models;
 
 namespace TraineeManagement.api.Data
 {
@@ -11,5 +12,6 @@ namespace TraineeManagement.api.Data
         }
 
         public DbSet<TraineeModel> Trainees { get; set; }
+        public DbSet<UserModel> Users { get; set; }
     }
 }

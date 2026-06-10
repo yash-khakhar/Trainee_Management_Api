@@ -18,14 +18,14 @@ namespace TraineeManagement.api.Services
 
         private async Task<TraineeModel> FindTraineeById(int id)
         {
-            var trainee = await _context.Trainees.FindAsync(id);
+            TraineeModel? trainee = await _context.Trainees.FindAsync(id);
             if (trainee == null) throw new Exception("Trainee Not Found");
             else return trainee;
         }
 
         public async Task<TraineeResponse> AddTrainee(CreateTraineeRequest trainee)
         {
-            var traineeModel = new TraineeModel(
+            TraineeModel traineeModel = new TraineeModel(
                     trainee.FirstName.ToLower(), 
                     trainee.LastName.ToLower(), 
                     trainee.Email.ToLower(), 
@@ -43,7 +43,7 @@ namespace TraineeManagement.api.Services
 
         public async Task<bool> DeleteTraineeById(int id)
         {
-            var trainee = await _context.Trainees.FindAsync(id);
+            TraineeModel? trainee = await _context.Trainees.FindAsync(id);
             if (trainee == null) return false;
             _context.Trainees.Remove(trainee);
             await _context.SaveChangesAsync();
@@ -53,7 +53,7 @@ namespace TraineeManagement.api.Services
         public async Task<TraineeResponse> GetTraineeById(int id)
         {
  
-            var trainee = await _context.Trainees
+            TraineeResponse? trainee = await _context.Trainees
              .Where(p => p.Id == id)
             .Select(p => new TraineeResponse(p.Id, p.FirstName, p.LastName, p.Email, p.TechStack, p.Status, p.CreatedAt, p.UpdatedAt))
              .FirstOrDefaultAsync();
