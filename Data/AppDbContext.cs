@@ -13,5 +13,7 @@ namespace TraineeManagement.api.Data
 
         public DbSet<TraineeModel> Trainees { get; set; }
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<MentorModel> Mentor { get; set; }
+        public DbSet<TaskModel> Task { get; set; }
     }
 }

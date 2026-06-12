@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TraineeManagement.api.CustomException;
 using TraineeManagement.api.DTO.TraineeDto;
 using TraineeManagement.api.Enum.Trainee;
 using TraineeManagement.api.Enum.User;
@@ -32,13 +33,14 @@ namespace TraineeManagement.api.Controllers
         {
             try
             {
-                if(search != null && pageNumber != 0 && pageSize != 0)
+                if (search != null && pageNumber != 0 && pageSize != 0)
                 {
-                    TraineeSearchResultDto traineeSearchResultDto =  await _traineeServices.SearchWithPagination(pageNumber, pageSize, search.ToLower(), status);
-                    
+                    TraineeSearchResultDto traineeSearchResultDto = await _traineeServices.SearchWithPagination(pageNumber, pageSize, search.ToLower(), status);
+
                     return Ok(traineeSearchResultDto);
 
-                } else if(search != null)
+                }
+                else if (search != null)
                 {
                     return Ok(await _traineeServices.SearchTrainee(search.ToLower()));
                 }
@@ -47,7 +49,7 @@ namespace TraineeManagement.api.Controllers
                     return Ok(await _traineeServices.GetTraineeList());
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _logger.LogInformation($"Exception in Seaching Trainee: {ex.Message}");
                 return BadRequest(ex.Message);
@@ -60,13 +62,24 @@ namespace TraineeManagement.api.Controllers
         {
             try
             {
-                return Ok(await _traineeServices.GetTraineeById(id));
+                TraineeResponse trainee = await _traineeServices.GetTraineeById(id);
+                return Ok(trainee);
             }
-            catch(Exception ex)
+            catch (NotFoundException ex)
             {
-                _logger.LogInformation($"Exception in Fetching Trainee by Id: {ex.Message}");
                 return BadRequest(ex.Message);
             }
+            catch (Exception ex)
+            {
+
+                var errorResponse = new { message = ex.Message };
+
+                _logger.LogError($"ERROR: Exception in User Creation: {ex.Message}");
+
+                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
+
+            }
+
         }
 
         [HttpPost]
@@ -83,14 +96,14 @@ namespace TraineeManagement.api.Controllers
             {
                 TraineeResponse traineeRespone =  await _traineeServices.AddTrainee(trainee);
 
-                _logger.LogInformation($"Trainee Creation: {traineeRespone.FirstName} created!!");
+                _logger.LogInformation($"POST: New Trainee. {traineeRespone.FirstName} created!!");
 
                 return traineeRespone;
 
             }
             catch (Exception ex)
             {
-                _logger.LogInformation($"Exception in Trainee Creation: {ex.Message}");
+                _logger.LogError($"ERROR: Exception in Trainee Creation: {ex.Message}");
                 return BadRequest(ex.Message);
             }
 
@@ -105,13 +118,13 @@ namespace TraineeManagement.api.Controllers
             {
                 TraineeResponse traineeRespone = await _traineeServices.UpdateTrainee(updateTraineeRequest);
 
-                _logger.LogInformation($"Trainee Updation: {traineeRespone.FirstName} updated!!");
+                _logger.LogInformation($"PUT: Trainee Updation. {traineeRespone.FirstName} updated!!");
 
                 return traineeRespone;
             }
             catch (Exception ex) 
             {
-                _logger.LogInformation($"Exception in Trainee Updation: {ex.Message}");
+                _logger.LogError($"ERROR: Exception in Trainee Updation: {ex.Message}");
                 return BadRequest(ex.Message);
             }
         }
@@ -134,7 +147,7 @@ namespace TraineeManagement.api.Controllers
             }
             catch (Exception ex) 
             {
-                _logger.LogInformation($"Exception in Trainee Deletion: {ex.Message}");
+                _logger.LogError($"ERROR: Exception in Trainee Deletion: {ex.Message}");
                 return BadRequest(ex.Message);
             }
             

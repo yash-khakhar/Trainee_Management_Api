@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.TraineeDto;
 using TraineeManagement.api.Enum.Trainee;
@@ -60,9 +61,8 @@ namespace TraineeManagement.api.Services
             .Select(p => new TraineeResponse(p.Id, p.FirstName, p.LastName, p.Email, p.TechStack, p.Status, p.CreatedAt, p.UpdatedAt))
              .FirstOrDefaultAsync();
 
-            if (trainee == null) throw new Exception("Trainee Not Found");
-
-            return trainee;
+            if (trainee == null) throw new NotFoundException("Trainee Not Found");
+            else return trainee;
             
         }
 
@@ -131,12 +131,12 @@ namespace TraineeManagement.api.Services
             int skip = pageSize * pageNumber - pageSize;
 
             var traineeList = await _context.Trainees
-                .Skip(skip)
-                .Take(pageSize)
                 .Where(
                     trainee => trainee.FirstName.Contains(search) &&
                     trainee.Status.Equals(role)
                 )
+                .Skip(skip)
+                .Take(pageSize)
                 .Select(trainee =>
                     new TraineeResponse(
                         trainee.Id,

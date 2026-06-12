@@ -25,7 +25,7 @@ namespace TraineeManagement.api.Controllers
 
                 if (user == null)
                 {
-                    _logger.LogInformation($"Exception in User Creation: Invalid input provided by user");
+                    _logger.LogInformation($"ERROR: Exception in User Creation: Invalid input provided by user");
                     return BadRequest("Please provide correct input");
                 }
 
@@ -41,7 +41,7 @@ namespace TraineeManagement.api.Controllers
 
                 var errorResponse = new { message = ex.Message };
 
-                _logger.LogInformation($"Exception in User Creation: {ex.Message}");
+                _logger.LogError($"ERROR: Exception in User Creation: {ex.Message}");
 
                 return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
             }
@@ -57,7 +57,7 @@ namespace TraineeManagement.api.Controllers
 
                 if (user == null)
                 {
-                    _logger.LogInformation($"Exception in User Login: Invalid Credentials");
+                    _logger.LogInformation($"ERROR: Exception in User Login: Invalid Credentials");
                     return BadRequest("Please provide correct input");
                 }
 
@@ -73,7 +73,7 @@ namespace TraineeManagement.api.Controllers
 
                 var errorResponse = new { message = ex.Message };
 
-                _logger.LogInformation($"Exception in User Login: {ex.Message}");
+                _logger.LogError($"ERROR: Exception in User Login: {ex.Message}");
 
                 return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
             }
