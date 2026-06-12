@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -6,11 +7,18 @@ using System.Text.Json.Serialization;
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.Middleware;
-using TraineeManagement.api.repository;
-using TraineeManagement.api.Repository;
+using TraineeManagement.api.Repository.Mentor;
+using TraineeManagement.api.Repository.Password;
+using TraineeManagement.api.Repository.Task;
+using TraineeManagement.api.Repository.TaskAssignment;
+using TraineeManagement.api.Repository.Trainee;
+using TraineeManagement.api.Repository.User;
 using TraineeManagement.api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//builder.Services.AddProblemDetails();
+//builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddOpenApiDocument();
@@ -57,22 +65,18 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+
 
 builder.Services.AddScoped<ITraineeService, TraineeServices>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IMentorService, MentorService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
-
-//builder.Services.AddProblemDetails();
-//builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-
-
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseInMemoryDatabase("TraineeManagementDb"));
-
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<ITaskAssignmentService, TaskAssignmentService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));
@@ -81,6 +85,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 var app = builder.Build();
 
 app.UseMiddleware<HttpStatusCodeHandler>();
+
 //app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())

@@ -6,12 +6,10 @@ namespace TraineeManagement.api.CustomException
     public class GlobalExceptionHandler : IExceptionHandler
     {
         private readonly ILogger<GlobalExceptionHandler> _logger;
-        private readonly IProblemDetailsService _problemDetailsService;
 
-        public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IProblemDetailsService problemDetailsService)
+        public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
         {
             _logger = logger;
-            _problemDetailsService = problemDetailsService;
         }
 
         public async ValueTask<bool> TryHandleAsync(
@@ -22,33 +20,26 @@ namespace TraineeManagement.api.CustomException
         {
             _logger.LogError(exception, "An exception occurred: {Message}", exception.Message);
 
-           
-            var statusCode = exception switch
+            var (statusCode, title) = exception switch
             {
-                NotFoundException => StatusCodes.Status404NotFound,
-                _ => StatusCodes.Status500InternalServerError
+                NotFoundException => (StatusCodes.Status400BadRequest, "Resource Not Found"),
+                UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorised Excess"),
+                _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
             };
 
-            var title = exception switch
+            var problemDetails = new ProblemDetails
             {
-                NotFoundException => "Resource Not Found",
-                _ => "Internal Server Error"
+                Title = title,
+                Detail = exception.Message,
+                Instance = httpContext.Request.Path
             };
 
             httpContext.Response.StatusCode = statusCode;
 
-           
-            return await _problemDetailsService.TryWriteAsync(new ProblemDetailsContext
-            {
-                HttpContext = httpContext,
-                Exception = exception,
-                ProblemDetails = new ProblemDetails
-                {
-                    Status = statusCode,
-                    Title = title,
-                    Detail = exception.Message
-                }
-            });
+            await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+
+            return true;
+
         }
     }
 }

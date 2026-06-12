@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TraineeManagement.api.DTO.Task;
-using TraineeManagement.api.Enum.Task;
-using TraineeManagement.api.Repository;
+using TraineeManagement.api.Enum;
+using TraineeManagement.api.Repository.Task;
 
 namespace TraineeManagement.api.Models
 {

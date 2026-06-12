@@ -57,6 +57,44 @@ namespace TraineeManagement.api.Migrations
                     b.ToTable("Mentor");
                 });
 
+            modelBuilder.Entity("TraineeManagement.api.Models.TaskAssignmentModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AssignedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("MentorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TraineeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MentorId");
+
+                    b.HasIndex("TaskId");
+
+                    b.HasIndex("TraineeId");
+
+                    b.ToTable("TaskAssignment");
+                });
+
             modelBuilder.Entity("TraineeManagement.api.Models.TaskModel", b =>
                 {
                     b.Property<int>("Id")
@@ -164,6 +202,33 @@ namespace TraineeManagement.api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Trainees");
+                });
+
+            modelBuilder.Entity("TraineeManagement.api.Models.TaskAssignmentModel", b =>
+                {
+                    b.HasOne("TraineeManagement.api.Models.MentorModel", "Mentor")
+                        .WithMany()
+                        .HasForeignKey("MentorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TraineeManagement.api.Models.TaskModel", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TraineeManagement.api.models.TraineeModel", "Trainee")
+                        .WithMany()
+                        .HasForeignKey("TraineeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mentor");
+
+                    b.Navigation("Task");
+
+                    b.Navigation("Trainee");
                 });
 #pragma warning restore 612, 618
         }

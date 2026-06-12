@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TraineeManagement.api.Enum.Task;
+﻿using TraineeManagement.api.Enum;
 
 namespace TraineeManagement.api.DTO.Task
 {
@@ -10,7 +9,6 @@ namespace TraineeManagement.api.DTO.Task
         public string? Description { get; set; }
         public string? ExpectedTechStack { get; set; }
         public DateTime? DueDate { get; set; }
-        
         public TaskStatusEnum? Status { get; set; }
     }
 }

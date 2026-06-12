@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using TraineeManagement.api.DTO.UserDto;
-using TraineeManagement.api.Enum.User;
-using TraineeManagement.api.Repository;
+using TraineeManagement.api.Enum;
+using TraineeManagement.api.Repository.User;
 
 namespace TraineeManagement.api.Models
 {

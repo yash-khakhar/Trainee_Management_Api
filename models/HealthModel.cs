@@ -1,4 +1,4 @@
-﻿using TraineeManagement.api.repository;
+﻿using TraineeManagement.api.Repository.Health;
 
 namespace TraineeManagement.api.models
 {

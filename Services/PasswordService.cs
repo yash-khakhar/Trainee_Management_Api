@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.Models;
-using TraineeManagement.api.Repository;
+using TraineeManagement.api.Repository.Password;
 
 namespace TraineeManagement.api.Services
 {

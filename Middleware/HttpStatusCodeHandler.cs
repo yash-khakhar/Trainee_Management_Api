@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using System.Text.Json;
 using TraineeManagement.api.CustomException;
 
@@ -21,72 +22,78 @@ namespace TraineeManagement.api.Middleware
             {
                 await _next(context);
 
-                // If headers are already sent, we cannot safely modify the response body or status code
-                if (context.Response.HasStarted)
+                if (!context.Response.HasStarted)
                 {
-                    return;
+                    switch (context.Response.StatusCode)
+                    {
+                        case StatusCodes.Status401Unauthorized:
+                            _logger.LogCritical("User tried to log in but failed (Unauthorized).");
+                            await WriteErrorResponse(context, "Unauthorized Action", StatusCodes.Status401Unauthorized, "You are unauthorized to access.");
+                            break;
+
+                        case StatusCodes.Status403Forbidden:
+                            _logger.LogError("ERROR: User tried to log in but failed (Forbidden).");
+                            await WriteErrorResponse(context, "Forbidden Action", StatusCodes.Status403Forbidden, "You are forbidden to access the resource.");
+                            break;
+
+                        case StatusCodes.Status404NotFound:
+                            _logger.LogError("ERROR: Invalid Resource Requested");
+                            await WriteErrorResponse(context, "Resource Not Found", StatusCodes.Status404NotFound, "Invalid Resource Found.");
+                            break;
+                    }
                 }
 
-                switch (context.Response.StatusCode)
+            }
+            catch (BadHttpRequestException ex)
+            {
+                _logger.LogWarning(ex, "A bad JSON or model binding request occurred.");
+
+                string technicalMessage = ex.InnerException?.Message ?? ex.Message;
+                string clearMessage = $"Invalid input data format: {technicalMessage}";
+
+                await WriteErrorResponse(context, "Model Validation Error", StatusCodes.Status400BadRequest, clearMessage);
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is MySqlException mysqlEx)
+            {
+                // 1452 is the MySQL error code for a Foreign Key constraint violation
+                if (mysqlEx.Number == 1452)
                 {
-                    case StatusCodes.Status401Unauthorized:
-                        _logger.LogCritical("User tried to log in but failed (Unauthorized).");
-                        await WriteErrorResponse(context, "Unauthorized Action", StatusCodes.Status401Unauthorized, "You are unauthorized to access.");
-                        break;
-
-                    case StatusCodes.Status403Forbidden:
-                        _logger.LogError("ERROR: User tried to log in but failed (Forbidden).");
-                        await WriteErrorResponse(context, "Forbidden Action", StatusCodes.Status403Forbidden, "You are forbidden to access the resource.");
-                        break;
-
-                    case StatusCodes.Status404NotFound:
-                        _logger.LogError("ERROR: Invalid Resource Requested");
-                        await WriteErrorResponse(context, "Resource Not Found", StatusCodes.Status404NotFound, "Invalid Resource Found.");
-                        break;
-
-                    default:
-                        await WriteErrorResponse(context, "Internal Server Error", StatusCodes.Status500InternalServerError, "Internal Server Error");
-                        break;
+                    _logger.LogWarning("Foreign key violation occurred: {Message}", mysqlEx.Message);
+                    await WriteErrorResponse(context, "Bad Request", StatusCodes.Status400BadRequest, "The provided Trainee, Mentor, or Task ID does not exist.");
                 }
+                else
+                {
+                    // Handling other general MySQL database update errors
+                    _logger.LogError(ex, "A database update error occurred.");
+                    await WriteErrorResponse(context, "Database Error", StatusCodes.Status500InternalServerError, "A database processing error occurred.");
+                }
+            }
+            catch (NotFoundException ex)
+            {
+                // Not found Trainee, Mentor or Task Exception
+                _logger.LogError(ex, ex.Message);
+                await WriteErrorResponse(context, "Resource Not Found", StatusCodes.Status404NotFound, ex.Message);
+            }
+            catch(DuplicateUsernameException ex)
+            {
+                //When user tries to create username that already exists
+                _logger.LogError(ex, ex.Message);
+                await WriteErrorResponse(context, "Duplicate Username Exception", StatusCodes.Status400BadRequest, ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An exception escaped the pipeline: {Message}", ex.Message);
 
-                await HandleExceptionAsync(context, ex);
+                await WriteErrorResponse(context, "Internal Server Error", StatusCodes.Status500InternalServerError, ex.Message);
             }
-        }
-
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
-        {
-           
-            if (context.Response.HasStarted)
-            {
-                _logger.LogWarning("The response has already started. Cannot write exception payload.");
-                return;
-            }
-
-            var statusCode = StatusCodes.Status500InternalServerError;
-            var errorType = "Internal Server Error";
-            var message = "An unexpected error occurred on our server. Please try again later.";
-
-            if (exception is NotFoundException)
-            {
-                statusCode = StatusCodes.Status404NotFound;
-                errorType = "Resource Not Found";
-                message = exception.Message;
-            }
-
-            
-            context.Response.StatusCode = statusCode;
-
-            await WriteErrorResponse(context, errorType, statusCode, message);
         }
 
         private static async Task WriteErrorResponse(HttpContext context, string errorType, int statusCode, string message)
         {
-            
+            if (context.Response.HasStarted) return;
+
             context.Response.ContentType = "application/json";
+            context.Response.StatusCode = statusCode;
 
             var payload = new
             {

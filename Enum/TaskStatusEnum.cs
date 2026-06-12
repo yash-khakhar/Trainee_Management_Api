@@ -1,4 +1,4 @@
-﻿namespace TraineeManagement.api.Enum.Task
+﻿namespace TraineeManagement.api.Enum
 {
     public enum TaskStatusEnum
     {

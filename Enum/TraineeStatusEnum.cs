@@ -1,4 +1,4 @@
-﻿namespace TraineeManagement.api.Enum.Trainee
+﻿namespace TraineeManagement.api.Enum
 {
     public enum TraineeStatusEnum
     {

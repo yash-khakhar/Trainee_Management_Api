@@ -1,6 +1,6 @@
 ﻿using TraineeManagement.api.DTO.Task;
 
-namespace TraineeManagement.api.Repository
+namespace TraineeManagement.api.Repository.Task
 {
     public interface ITaskService
     {

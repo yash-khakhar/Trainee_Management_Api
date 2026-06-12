@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TraineeManagement.api.Enum.User;
+using TraineeManagement.api.Enum;
 
 namespace TraineeManagement.api.DTO.UserDto
 {

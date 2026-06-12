@@ -3,10 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.TraineeDto;
-using TraineeManagement.api.Enum.Trainee;
-using TraineeManagement.api.Enum.User;
+using TraineeManagement.api.Enum;
 using TraineeManagement.api.models;
-using TraineeManagement.api.repository;
+using TraineeManagement.api.Repository.Trainee;
 
 namespace TraineeManagement.api.Services
 {
@@ -85,7 +84,7 @@ namespace TraineeManagement.api.Services
 
             if (updateTraineeRequest.Email != null) trainee.Email = updateTraineeRequest.Email;
 
-            trainee.Status = (Enum.Trainee.TraineeStatusEnum)updateTraineeRequest.Status;
+            trainee.Status = (TraineeStatusEnum)updateTraineeRequest.Status;
 
             if (updateTraineeRequest.TechStack != null) trainee.TechStack = updateTraineeRequest.TechStack;
 

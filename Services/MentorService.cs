@@ -3,7 +3,7 @@ using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.MentorDto;
 using TraineeManagement.api.Models;
-using TraineeManagement.api.Repository;
+using TraineeManagement.api.Repository.Mentor;
 
 namespace TraineeManagement.api.Services
 {

@@ -1,7 +1,6 @@
-﻿
-using TraineeManagement.api.Models;
+﻿using TraineeManagement.api.Models;
 
-namespace TraineeManagement.api.Repository
+namespace TraineeManagement.api.Repository.Password
 {
     public interface IPasswordService
     {

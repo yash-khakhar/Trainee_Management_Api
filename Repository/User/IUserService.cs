@@ -1,6 +1,6 @@
 ﻿using TraineeManagement.api.DTO.UserDto;
 
-namespace TraineeManagement.api.Repository
+namespace TraineeManagement.api.Repository.User
 {
     public interface IUserService
     {

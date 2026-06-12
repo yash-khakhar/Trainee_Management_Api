@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TraineeManagement.api.DTO.UserDto;
-using TraineeManagement.api.Repository;
+using TraineeManagement.api.Repository.User;
 
 namespace TraineeManagement.api.Controllers
 {
@@ -20,64 +20,32 @@ namespace TraineeManagement.api.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserResponse>> RegisterUser([FromBody] CreateUserRequest user)
         {
-            try
+            if (user == null)
             {
-
-                if (user == null)
-                {
-                    _logger.LogInformation($"ERROR: Exception in User Creation: Invalid input provided by user");
-                    return BadRequest("Please provide correct input");
-                }
-
-                UserResponse userResponse =  await _userService.RegisterUser(user);
-                
-                _logger.LogInformation($"Register: {userResponse.UserName} is registered!!");
-                
-                return userResponse;
+                throw new Exception("Please Provide Correct Input Data");
             }
 
-            catch (Exception ex)
-            {
+            UserResponse userResponse = await _userService.RegisterUser(user);
 
-                var errorResponse = new { message = ex.Message };
+            _logger.LogInformation($"Register: {userResponse.UserName} is registered!!");
 
-                _logger.LogError($"ERROR: Exception in User Creation: {ex.Message}");
-
-                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-            }
-
-
+            return userResponse;
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<UserLoginResponse>> Login([FromBody] UserLoginRequestDto user)
         {
-            try
+            if (user == null)
             {
-
-                if (user == null)
-                {
-                    _logger.LogInformation($"ERROR: Exception in User Login: Invalid Credentials");
-                    return BadRequest("Please provide correct input");
-                }
-
-                var userLoginResponse = await _userService.Login(user);
-
-                _logger.LogInformation($"Login: {userLoginResponse.User.UserName} is logged in!!");
-
-                return userLoginResponse;
+                _logger.LogInformation($"ERROR: Exception in User Login: Invalid Credentials");
+                throw new Exception("Invalid Credentails");
             }
 
-            catch (Exception ex)
-            {
+            var userLoginResponse = await _userService.Login(user);
 
-                var errorResponse = new { message = ex.Message };
+            _logger.LogInformation($"Login: {userLoginResponse.User.UserName} is logged in!!");
 
-                _logger.LogError($"ERROR: Exception in User Login: {ex.Message}");
-
-                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-            }
-
+            return userLoginResponse;
 
         }
 

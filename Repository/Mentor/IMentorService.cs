@@ -1,8 +1,6 @@
 ﻿using TraineeManagement.api.DTO.MentorDto;
-using TraineeManagement.api.DTO.TraineeDto;
-using TraineeManagement.api.Enum.Trainee;
 
-namespace TraineeManagement.api.Repository
+namespace TraineeManagement.api.Repository.Mentor
 {
     public interface IMentorService
     {

@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.DTO.TraineeDto;
-using TraineeManagement.api.Enum.Trainee;
-using TraineeManagement.api.Enum.User;
-using TraineeManagement.api.repository;
+using TraineeManagement.api.Enum;
+using TraineeManagement.api.Repository.Trainee;
 
 namespace TraineeManagement.api.Controllers
 {
@@ -31,28 +30,20 @@ namespace TraineeManagement.api.Controllers
             [FromQuery(Name = "status")] TraineeStatusEnum status = TraineeStatusEnum.ACTIVE
         )
         {
-            try
+            if (search != null && pageNumber != 0 && pageSize != 0)
             {
-                if (search != null && pageNumber != 0 && pageSize != 0)
-                {
-                    TraineeSearchResultDto traineeSearchResultDto = await _traineeServices.SearchWithPagination(pageNumber, pageSize, search.ToLower(), status);
+                TraineeSearchResultDto traineeSearchResultDto = await _traineeServices.SearchWithPagination(pageNumber, pageSize, search.ToLower(), status);
 
-                    return Ok(traineeSearchResultDto);
+                return Ok(traineeSearchResultDto);
 
-                }
-                else if (search != null)
-                {
-                    return Ok(await _traineeServices.SearchTrainee(search.ToLower()));
-                }
-                else
-                {
-                    return Ok(await _traineeServices.GetTraineeList());
-                }
             }
-            catch (Exception ex)
+            else if (search != null)
             {
-                _logger.LogInformation($"Exception in Seaching Trainee: {ex.Message}");
-                return BadRequest(ex.Message);
+                return Ok(await _traineeServices.SearchTrainee(search.ToLower()));
+            }
+            else
+            {
+                return Ok(await _traineeServices.GetTraineeList());
             }
 
         }
@@ -60,26 +51,8 @@ namespace TraineeManagement.api.Controllers
         [HttpGet("{id}", Name = "GetTraineeById")]
         public async Task<ActionResult<TraineeResponse>> GetTraineeById(int id)
         {
-            try
-            {
-                TraineeResponse trainee = await _traineeServices.GetTraineeById(id);
-                return Ok(trainee);
-            }
-            catch (NotFoundException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-
-                var errorResponse = new { message = ex.Message };
-
-                _logger.LogError($"ERROR: Exception in User Creation: {ex.Message}");
-
-                return StatusCode(StatusCodes.Status500InternalServerError, errorResponse);
-
-            }
-
+            TraineeResponse trainee = await _traineeServices.GetTraineeById(id);
+            return Ok(trainee);
         }
 
         [HttpPost]
@@ -89,23 +62,14 @@ namespace TraineeManagement.api.Controllers
 
             if (trainee == null)
             {
-                return BadRequest();
+                throw new NotFoundException("Trainee Not Found");
             }
 
-            try
-            {
-                TraineeResponse traineeRespone =  await _traineeServices.AddTrainee(trainee);
+            TraineeResponse traineeRespone = await _traineeServices.AddTrainee(trainee);
 
-                _logger.LogInformation($"POST: New Trainee. {traineeRespone.FirstName} created!!");
+            _logger.LogInformation($"POST: New Trainee. {traineeRespone.FirstName} created!!");
 
-                return traineeRespone;
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"ERROR: Exception in Trainee Creation: {ex.Message}");
-                return BadRequest(ex.Message);
-            }
+            return traineeRespone;
 
         }
 
@@ -114,43 +78,27 @@ namespace TraineeManagement.api.Controllers
         public async Task<ActionResult<TraineeResponse>> UpdateTrainee([FromBody] UpdateTraineeRequest updateTraineeRequest)
         {
 
-            try
-            {
-                TraineeResponse traineeRespone = await _traineeServices.UpdateTrainee(updateTraineeRequest);
+            TraineeResponse traineeRespone = await _traineeServices.UpdateTrainee(updateTraineeRequest);
 
-                _logger.LogInformation($"PUT: Trainee Updation. {traineeRespone.FirstName} updated!!");
+            _logger.LogInformation($"PUT: Trainee Updation. {traineeRespone.FirstName} updated!!");
 
-                return traineeRespone;
-            }
-            catch (Exception ex) 
-            {
-                _logger.LogError($"ERROR: Exception in Trainee Updation: {ex.Message}");
-                return BadRequest(ex.Message);
-            }
+            return traineeRespone;
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTraineeById(int id)
         {
-            try
+            bool isTraineeDeleted = await _traineeServices.DeleteTraineeById(id);
+            if (isTraineeDeleted)
             {
-                bool isTraineeDeleted = await _traineeServices.DeleteTraineeById(id);
-                if (isTraineeDeleted)
-                {
-                    _logger.LogInformation($"Trainee Deleted: Trainee Id: {id}");
-                    return NoContent();
-                }
-                else
-                {
-                    throw new Exception("Trainee Not Found");
-                }
+                _logger.LogInformation($"Trainee Deleted: Trainee Id: {id}");
+                return NoContent();
             }
-            catch (Exception ex) 
+            else
             {
-                _logger.LogError($"ERROR: Exception in Trainee Deletion: {ex.Message}");
-                return BadRequest(ex.Message);
+                throw new Exception("Trainee Not Found");
             }
-            
+
         }
 
     }

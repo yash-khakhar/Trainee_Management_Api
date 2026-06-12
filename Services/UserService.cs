@@ -4,7 +4,8 @@ using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.UserDto;
 using TraineeManagement.api.Helper;
 using TraineeManagement.api.Models;
-using TraineeManagement.api.Repository;
+using TraineeManagement.api.Repository.Password;
+using TraineeManagement.api.Repository.User;
 
 namespace TraineeManagement.api.Services
 {

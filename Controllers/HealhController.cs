@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TraineeManagement.api.Enum.User;
+using TraineeManagement.api.Enum;
 using TraineeManagement.api.models;
 
 namespace TraineeManagement.api.Controllers

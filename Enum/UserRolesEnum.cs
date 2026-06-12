@@ -1,4 +1,4 @@
-﻿namespace TraineeManagement.api.Enum.User
+﻿namespace TraineeManagement.api.Enum
 {
     public enum UserRolesEnum
     {

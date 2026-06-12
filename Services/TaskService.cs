@@ -2,8 +2,9 @@
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.Task;
+using TraineeManagement.api.Enum;
 using TraineeManagement.api.Models;
-using TraineeManagement.api.Repository;
+using TraineeManagement.api.Repository.Task;
 
 namespace TraineeManagement.api.Services
 {
@@ -74,7 +75,7 @@ namespace TraineeManagement.api.Services
 
             if (taskRequest.ExpectedTechStack != null) task.ExpectedTechStack = taskRequest.ExpectedTechStack;
 
-            if (taskRequest.Status != null) task.Status = (Enum.Task.TaskStatusEnum)taskRequest.Status;
+            if (taskRequest.Status != null) task.Status = (TaskStatusEnum)taskRequest.Status;
 
             if(taskRequest.DueDate != null) task.DueDate = (DateTime)taskRequest.DueDate;
 

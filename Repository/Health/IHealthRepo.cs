@@ -1,4 +1,4 @@
-﻿namespace TraineeManagement.api.repository
+﻿namespace TraineeManagement.api.Repository.Health
 {
     public interface IHealthRepo
     {

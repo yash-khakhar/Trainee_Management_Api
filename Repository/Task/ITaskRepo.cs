@@ -1,6 +1,6 @@
-﻿using TraineeManagement.api.Enum.Task;
+﻿using TraineeManagement.api.Enum;
 
-namespace TraineeManagement.api.Repository
+namespace TraineeManagement.api.Repository.Task
 {
     public interface ITaskRepo
     {

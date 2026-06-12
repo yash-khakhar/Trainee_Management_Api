@@ -1,7 +1,6 @@
-﻿using TraineeManagement.api.Enum.Trainee;
-using TraineeManagement.api.Enum.User;
+﻿using TraineeManagement.api.Enum;
 
-namespace TraineeManagement.api.Repository
+namespace TraineeManagement.api.Repository.User
 {
     public interface IUserRepo
     {
