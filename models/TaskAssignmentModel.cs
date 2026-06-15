@@ -63,7 +63,7 @@ namespace TraineeManagement.api.Models
                     taskAssignmentModel.AssignedDate,
                     taskAssignmentModel.DueDate,
                     taskAssignmentModel.Status,
-                    taskAssignmentModel.Remarks
+                    taskAssignmentModel.Remarks == null ? string.Empty : taskAssignmentModel.Remarks
                 );
         }
 

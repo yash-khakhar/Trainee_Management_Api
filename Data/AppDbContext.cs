@@ -16,6 +16,8 @@ namespace TraineeManagement.api.Data
         public DbSet<MentorModel> Mentor { get; set; }
         public DbSet<TaskModel> Task { get; set; }
         public DbSet<TaskAssignmentModel> TaskAssignment { get; set; }
+        public DbSet<SubmissionModel> Submission { get; set; }
+        public DbSet<ReviewModel> Review { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,6 +42,29 @@ namespace TraineeManagement.api.Data
                       .WithMany()
                       .HasForeignKey(d => d.MentorId)
                       .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<SubmissionModel>(entity =>
+            {
+                entity.HasOne(d => d.TaskAssignment)
+                    .WithMany()
+                    .HasForeignKey(d => d.TaskAssignmentId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<ReviewModel>(entity =>
+            {
+                entity.HasOne(d => d.Submission)
+                    .WithMany()
+                    .HasForeignKey(d => d.SubmissionId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(d => d.Mentor)
+                    .WithMany()
+                    .HasForeignKey(d => d.MentorId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
             });
 

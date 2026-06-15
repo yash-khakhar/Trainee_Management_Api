@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TraineeManagement.api.Enum;
+﻿using TraineeManagement.api.Enum;
 
 namespace TraineeManagement.api.DTO.TraineeDto
 {
@@ -16,6 +15,8 @@ namespace TraineeManagement.api.DTO.TraineeDto
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
         }
+
+        public TraineeResponse() { }
 
         public int Id { get; set; }
         public string FirstName { get; set; }

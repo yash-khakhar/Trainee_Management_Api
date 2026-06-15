@@ -27,10 +27,13 @@ namespace TraineeManagement.api.Controllers
             return Ok(taskList);
         }
 
-        
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaskAssignmentById(int id)
         {
+
+            if (id <= 0) throw new Exception("Invalid Data Input"); 
+
             TaskAssignmentResponse task = await _taskAssignmentService.GetTaskAssignmentById(id);
             return Ok(task);
         }
@@ -39,6 +42,8 @@ namespace TraineeManagement.api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddTaskAssignment([FromBody] CreateTaskAssignmentRequest taskRequest)
         {
+            if (taskRequest == null) throw new Exception("Invalid Data Input");
+
             TaskAssignmentResponse task = await _taskAssignmentService.AddTaskAssignment(taskRequest);
             _logger.LogInformation($"NEW TASK Assignment ADDED");
             return StatusCode(StatusCodes.Status201Created, task);
@@ -48,6 +53,8 @@ namespace TraineeManagement.api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTaskAssignment(int id, [FromBody] UpdateTaskAssignmentRequest taskRequest)
         {
+            if (taskRequest == null) throw new Exception("Invalid Data Input");
+
             TaskAssignmentResponse task = await _taskAssignmentService.UpdateTaskAssignment(id, taskRequest);
             _logger.LogInformation($"TASK Assignment UPDATED");
             return StatusCode(StatusCodes.Status200OK, task);

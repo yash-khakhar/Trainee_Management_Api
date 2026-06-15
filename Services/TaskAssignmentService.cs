@@ -19,9 +19,14 @@ namespace TraineeManagement.api.Services
         public async Task<TaskAssignmentResponse> AddTaskAssignment(CreateTaskAssignmentRequest taskAssignment)
         {
 
-            if(taskAssignment.DueDate < taskAssignment.AssignedDate)
+            DateTime dueDate = await _context.Task
+                .Where(t => t.Id == taskAssignment.TaskId)
+                .Select(t => t.DueDate)
+                .FirstOrDefaultAsync();
+
+            if(dueDate < taskAssignment.AssignedDate)
             {
-                throw new Exception("Due Date cannot be before Assigned Date!");
+                throw new Exception("Task Due Date cannot be before Assigned Date!");
             }
 
             TaskAssignmentModel taskAssignmentModel = new TaskAssignmentModel(
@@ -29,11 +34,10 @@ namespace TraineeManagement.api.Services
                      taskAssignment.MentorId,
                      taskAssignment.TaskId,
                      taskAssignment.AssignedDate,
-                     taskAssignment.DueDate,
+                     dueDate,
                      taskAssignment.Status,
-                     taskAssignment.Remarks
-                 );
-
+                     taskAssignment.Remarks == null ? "" : taskAssignment.Remarks
+            );
 
             _context.TaskAssignment.Add(taskAssignmentModel);
 
@@ -45,9 +49,18 @@ namespace TraineeManagement.api.Services
         public async Task<TaskAssignmentResponse> GetTaskAssignmentById(int id)
         {
             TaskAssignmentResponse? taskAssignment = await _context.TaskAssignment
-                 .Where(t => t.Id == id)
-                 .Select(t => new TaskAssignmentResponse(t.Id, t.TraineeId, t.MentorId, t.TaskId, t.AssignedDate, t.DueDate, t.Status, t.Remarks))
-                 .FirstOrDefaultAsync();
+                    .Where(t => t.Id == id)
+                    .Select(t => new TaskAssignmentResponse(
+                        t.Id, 
+                        t.TraineeId, 
+                        t.MentorId, 
+                        t.TaskId, 
+                        t.AssignedDate, 
+                        t.DueDate, 
+                        t.Status, 
+                        t.Remarks == null ? string.Empty : t.Remarks
+                    ))
+                    .FirstOrDefaultAsync();
 
             if (taskAssignment == null) throw new NotFoundException("Task Assignment Not Found");
 
@@ -57,8 +70,21 @@ namespace TraineeManagement.api.Services
         public async Task<IEnumerable<TaskAssignmentResponse>> GetTaskAssignmentList()
         {
             List<TaskAssignmentResponse> taskAssignmentList = await _context.TaskAssignment
-              .Select(t => new TaskAssignmentResponse(t.Id, t.TraineeId, t.MentorId, t.TaskId, t.AssignedDate, t.DueDate, t.Status, t.Remarks))
-              .ToListAsync();
+                .Include(t => t.Trainee)
+                .Include(t => t.Mentor)
+                .Include(t => t.Task)
+                .Select(t => new TaskAssignmentResponse(
+                    t.Id, 
+                    t.TraineeId, 
+                    t.MentorId, 
+                    t.TaskId, 
+                    t.AssignedDate, 
+                    t.DueDate, 
+                    t.Status, 
+                    t.Remarks == null ? string.Empty : t.Remarks
+
+                 ))
+                .ToListAsync();
 
             return taskAssignmentList;
         }

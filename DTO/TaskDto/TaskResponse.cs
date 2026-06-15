@@ -4,6 +4,8 @@ namespace TraineeManagement.api.DTO.Task
 {
     public class TaskResponse
     {
+        public TaskResponse() { }
+
         public TaskResponse(
             int id, 
             string title, 

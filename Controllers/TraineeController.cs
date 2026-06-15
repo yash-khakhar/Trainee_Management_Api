@@ -9,7 +9,7 @@ namespace TraineeManagement.api.Controllers
 {
  
     [Route("api/[controller]")]
-    [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
+    [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
     [ApiController]
     public class TraineeController : ControllerBase
     {

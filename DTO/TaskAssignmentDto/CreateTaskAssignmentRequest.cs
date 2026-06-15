@@ -18,9 +18,6 @@ namespace TraineeManagement.api.DTO.TaskAssignmentDto
         public DateTime AssignedDate { get; set; }
 
         [Required]
-        public DateTime DueDate { get; set; }
-
-        [Required]
         public TaskAssignmentStatusEnum Status { get; set; }
         public string? Remarks { get; set; }
     }

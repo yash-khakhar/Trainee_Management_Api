@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
-using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.Middleware;
 using TraineeManagement.api.Repository.Mentor;
 using TraineeManagement.api.Repository.Password;
+using TraineeManagement.api.Repository.Review;
+using TraineeManagement.api.Repository.Submission;
 using TraineeManagement.api.Repository.Task;
 using TraineeManagement.api.Repository.TaskAssignment;
 using TraineeManagement.api.Repository.Trainee;
@@ -77,6 +78,8 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IMentorService, MentorService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskAssignmentService, TaskAssignmentService>();
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));

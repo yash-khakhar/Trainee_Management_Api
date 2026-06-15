@@ -13,7 +13,8 @@ namespace TraineeManagement.api.DTO.TaskAssignmentDto
             DateTime assignedDate,
             DateTime dueDate,
             TaskAssignmentStatusEnum status,
-            string? remarks
+            string remarks
+
         )
         {
             Id = id;
@@ -26,6 +27,8 @@ namespace TraineeManagement.api.DTO.TaskAssignmentDto
             Remarks = remarks;
         }
 
+        public TaskAssignmentResponse() { }
+
         public int Id { get; set; }
         public int TraineeId { get; set; }
         public int MentorId { get; set; }
@@ -33,6 +36,7 @@ namespace TraineeManagement.api.DTO.TaskAssignmentDto
         public DateTime AssignedDate { get; set; }
         public DateTime DueDate { get; set; }
         public TaskAssignmentStatusEnum Status { get; set; }
-        public string? Remarks { get; set; }
+        public string Remarks { get; set; } = string.Empty;
+
     }
 }

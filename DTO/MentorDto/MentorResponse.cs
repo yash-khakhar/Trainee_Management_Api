@@ -16,6 +16,8 @@ namespace TraineeManagement.api.DTO.MentorDto
             UpdatedAt = updatedAt;
         }
 
+        public MentorResponse() { }
+
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
