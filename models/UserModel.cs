@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using TraineeManagement.api.DTO.UserDto;
 using TraineeManagement.api.Enum;
+using TraineeManagement.api.models;
 using TraineeManagement.api.Repository.User;
 
 namespace TraineeManagement.api.Models
@@ -35,6 +36,9 @@ namespace TraineeManagement.api.Models
         public UserRolesEnum Role { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        public virtual TraineeModel? Trainee { get; set; }
+        public virtual MentorModel? Mentor { get; set; }
 
         public static UserResponse ToDto(UserModel userModel)
         {

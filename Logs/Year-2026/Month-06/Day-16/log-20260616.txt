@@ -1,0 +1,99 @@
+2026-06-16 12:23:15.117 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-16 12:23:16.081 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-16 12:23:16.085 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-16 12:23:19.081 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Review - application/json 175
+2026-06-16 12:23:19.181 +05:30 [INF] HTTP POST /api/Review responded 307 in 36.3543 ms
+2026-06-16 12:23:19.208 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Review - 307 0 null 154.5346ms
+2026-06-16 12:23:19.525 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Review - application/json 175
+2026-06-16 12:23:19.925 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-16 12:23:19.926 +05:30 [INF] Hosting environment: Development
+2026-06-16 12:23:19.926 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-16 12:23:20.008 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (ADMIN|MENTOR)
+2026-06-16 12:23:20.036 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-16 12:23:20.038 +05:30 [FTL] User tried to log in but failed (Unauthorized).
+2026-06-16 12:23:20.068 +05:30 [INF] HTTP POST /api/Review responded 401 in 541.6710 ms
+2026-06-16 12:23:20.077 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Review - 401 null application/json 552.2165ms
+2026-06-16 12:24:22.879 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-16 12:24:23.830 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-16 12:24:23.832 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-16 12:24:26.653 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-16 12:24:26.654 +05:30 [INF] Hosting environment: Development
+2026-06-16 12:24:26.654 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-16 12:24:42.749 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Review - application/json 175
+2026-06-16 12:24:42.840 +05:30 [INF] HTTP POST /api/Review responded 307 in 36.8124 ms
+2026-06-16 12:24:42.869 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Review - 307 0 null 151.2233ms
+2026-06-16 12:24:43.133 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Review - application/json 175
+2026-06-16 12:24:43.483 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (ADMIN|MENTOR)
+2026-06-16 12:24:43.505 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-16 12:24:43.506 +05:30 [FTL] User tried to log in but failed (Unauthorized).
+2026-06-16 12:24:43.523 +05:30 [INF] HTTP POST /api/Review responded 401 in 388.9396 ms
+2026-06-16 12:24:43.529 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Review - 401 null application/json 396.2834ms
+2026-06-16 12:24:56.326 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Review - application/json 175
+2026-06-16 12:24:56.327 +05:30 [INF] HTTP POST /api/Review responded 307 in 0.2755 ms
+2026-06-16 12:24:56.327 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Review - 307 0 null 1.6678ms
+2026-06-16 12:24:56.336 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Review - application/json 175
+2026-06-16 12:24:56.352 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (ADMIN|MENTOR)
+2026-06-16 12:24:56.353 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-16 12:24:56.353 +05:30 [FTL] User tried to log in but failed (Unauthorized).
+2026-06-16 12:24:56.354 +05:30 [INF] HTTP POST /api/Review responded 401 in 17.6967 ms
+2026-06-16 12:24:56.355 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Review - 401 null application/json 18.8292ms
+2026-06-16 12:30:45.119 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-16 12:30:46.102 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-16 12:30:46.106 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-16 12:30:49.520 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-16 12:30:49.521 +05:30 [INF] Hosting environment: Development
+2026-06-16 12:30:49.521 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-16 12:31:25.870 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Auth/login - application/json 54
+2026-06-16 12:31:25.961 +05:30 [INF] HTTP POST /api/Auth/login responded 307 in 36.2285 ms
+2026-06-16 12:31:25.991 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Auth/login - 307 0 null 148.8329ms
+2026-06-16 12:31:26.301 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Auth/login - application/json 54
+2026-06-16 12:31:26.611 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.AuthController.Login (TraineeManagement.api)'
+2026-06-16 12:31:26.724 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.UserDto.UserLoginResponse]] Login(TraineeManagement.api.DTO.UserDto.UserLoginRequestDto) on controller TraineeManagement.api.Controllers.AuthController (TraineeManagement.api).
+2026-06-16 12:31:33.786 +05:30 [INF] Executed DbCommand (41ms) [Parameters=[@userName='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`CreatedAt`, `u`.`Email`, `u`.`PasswordHash`, `u`.`Role`, `u`.`UpdatedAt`, `u`.`UserName`
+FROM `Users` AS `u`
+WHERE `u`.`UserName` = @userName
+LIMIT 1
+2026-06-16 12:31:34.632 +05:30 [INF] Login: admin is logged in!!
+2026-06-16 12:31:34.664 +05:30 [INF] Executing ObjectResult, writing value of type 'TraineeManagement.api.DTO.UserDto.UserLoginResponse'.
+2026-06-16 12:31:34.737 +05:30 [INF] Executed action TraineeManagement.api.Controllers.AuthController.Login (TraineeManagement.api) in 7989.3321ms
+2026-06-16 12:31:34.742 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.AuthController.Login (TraineeManagement.api)'
+2026-06-16 12:31:34.760 +05:30 [INF] HTTP POST /api/Auth/login responded 200 in 8458.1469 ms
+2026-06-16 12:31:34.795 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Auth/login - 200 null application/json; charset=utf-8 8494.7025ms
+2026-06-16 12:32:42.403 +05:30 [INF] Request starting HTTP/1.1 DELETE http://localhost:5220/api/Trainee/1000000 - text/plain 53
+2026-06-16 12:32:42.407 +05:30 [INF] HTTP DELETE /api/Trainee/1000000 responded 307 in 4.1923 ms
+2026-06-16 12:32:42.420 +05:30 [INF] Request finished HTTP/1.1 DELETE http://localhost:5220/api/Trainee/1000000 - 307 0 null 16.539ms
+2026-06-16 12:32:42.451 +05:30 [INF] Request starting HTTP/2 DELETE https://localhost:7153/api/Trainee/1000000 - text/plain 53
+2026-06-16 12:32:42.680 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.DeleteTraineeById (TraineeManagement.api)'
+2026-06-16 12:32:42.715 +05:30 [INF] Route matched with {action = "DeleteTraineeById", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] DeleteTraineeById(Int32) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-16 12:32:42.859 +05:30 [INF] Executed DbCommand (8ms) [Parameters=[@p='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`CreatedAt`, `t`.`Email`, `t`.`FirstName`, `t`.`LastName`, `t`.`Status`, `t`.`TechStack`, `t`.`UpdatedAt`, `t`.`UserId`
+FROM `Trainees` AS `t`
+WHERE `t`.`Id` = @p
+LIMIT 1
+2026-06-16 12:32:46.520 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.DeleteTraineeById (TraineeManagement.api) in 3803.5735ms
+2026-06-16 12:32:46.523 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.DeleteTraineeById (TraineeManagement.api)'
+2026-06-16 12:32:46.597 +05:30 [ERR] An exception escaped the pipeline: Trainee Not Found
+System.Exception: Trainee Not Found
+   at TraineeManagement.api.Controllers.TraineeController.DeleteTraineeById(Int32 id) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Controllers\TraineeController.cs:line 99
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at TraineeManagement.api.Middleware.HttpStatusCodeHandler.InvokeAsync(HttpContext context) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Middleware\HttpStatusCodeHandler.cs:line 23
+2026-06-16 12:32:46.671 +05:30 [ERR] HTTP DELETE /api/Trainee/1000000 responded 500 in 4219.4009 ms
+2026-06-16 12:32:46.672 +05:30 [INF] Request finished HTTP/2 DELETE https://localhost:7153/api/Trainee/1000000 - 500 null application/json 4221.6333ms

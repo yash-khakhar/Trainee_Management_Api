@@ -9,7 +9,6 @@ namespace TraineeManagement.api.Controllers
 {
  
     [Route("api/[controller]")]
-    [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
     [ApiController]
     public class TraineeController : ControllerBase
     {
@@ -23,6 +22,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
         public async Task<IActionResult> ListAllTrainee(
             [FromQuery(Name = "pageNumber")] int pageNumber = 0,
             [FromQuery(Name = "pageSize")] int pageSize = 0,
@@ -49,6 +49,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetTraineeById")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
         public async Task<ActionResult<TraineeResponse>> GetTraineeById(int id)
         {
             TraineeResponse trainee = await _traineeServices.GetTraineeById(id);
@@ -57,6 +58,7 @@ namespace TraineeManagement.api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(TraineeResponse), StatusCodes.Status201Created)]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
         public async Task<ActionResult<TraineeResponse>> AddTrainee([FromBody] CreateTraineeRequest trainee)
         {
 
@@ -75,6 +77,7 @@ namespace TraineeManagement.api.Controllers
 
         [HttpPut]
         [ProducesResponseType(typeof(TraineeResponse), StatusCodes.Status200OK)]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.TRAINEE)}")]
         public async Task<ActionResult<TraineeResponse>> UpdateTrainee([FromBody] UpdateTraineeRequest updateTraineeRequest)
         {
 
@@ -86,6 +89,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
         public async Task<IActionResult> DeleteTraineeById(int id)
         {
             bool isTraineeDeleted = await _traineeServices.DeleteTraineeById(id);

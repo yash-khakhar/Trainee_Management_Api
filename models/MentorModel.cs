@@ -19,8 +19,22 @@ namespace TraineeManagement.api.Models
             Status = status;
         }
 
+        public MentorModel(int id, string firstName, string lastName, string email, string expertise, MentorStatusEnum status)
+        {
+            UserId = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            Expertise = expertise;
+            Status = status;
+        }
+
         [Key]
         public int Id { get; set; }
+        
+        [Required]
+        public int UserId { get; set; }
+        public virtual UserModel User { get; set; } = null!;
 
         [Required]
         [StringLength(50, ErrorMessage = "First Name cannot be more than 50 characters")]

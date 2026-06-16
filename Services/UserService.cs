@@ -2,9 +2,14 @@
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.UserDto;
+using TraineeManagement.api.Enum;
+using TraineeManagement.api.Enum.Mentor;
 using TraineeManagement.api.Helper;
+using TraineeManagement.api.models;
 using TraineeManagement.api.Models;
+using TraineeManagement.api.Repository.Mentor;
 using TraineeManagement.api.Repository.Password;
+using TraineeManagement.api.Repository.Trainee;
 using TraineeManagement.api.Repository.User;
 
 namespace TraineeManagement.api.Services
@@ -15,12 +20,22 @@ namespace TraineeManagement.api.Services
         private AppDbContext _context;
         private IPasswordService _passwordService;
         private readonly IConfiguration _config;
+        private ITraineeService _traineeService;
+        private IMentorService _mentorService;
 
-        public UserService(AppDbContext context, IPasswordService passwordService, IConfiguration config)
+        public UserService(
+            AppDbContext context, 
+            IPasswordService passwordService, 
+            IConfiguration config,
+            ITraineeService traineeService,
+            IMentorService mentorService
+        )
         {
             _context = context;
             _passwordService = passwordService;
             _config = config;
+            _traineeService = traineeService;
+            _mentorService = mentorService;
         }
 
         private async Task<UserModel> FindByUsername(string userName)
@@ -58,27 +73,72 @@ namespace TraineeManagement.api.Services
 
         public async Task<UserResponse> RegisterUser(CreateUserRequest newUser)
         {
-
             if (await isUserPresent(newUser.Username))
             {
                 throw new DuplicateUsernameException($"The username '{newUser.Username}' is already taken.");
             }
 
-            UserModel userModel = new UserModel(
-                     newUser.Username,
-                     newUser.Email,
-                     _passwordService.HashPassword(newUser.Password),
-                     newUser.Role
-                     
-                 );
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            userModel.CreatedAt = DateTime.UtcNow;
-            userModel.UpdatedAt = DateTime.UtcNow;
+            try
+            {
+                UserModel userModel = new UserModel(
+                    newUser.Username,
+                    newUser.Email,
+                    _passwordService.HashPassword(newUser.Password),
+                    newUser.Role
+                )
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
 
-            _context.Users.Add(userModel);
-            await _context.SaveChangesAsync();
+                _context.Users.Add(userModel);
+                await _context.SaveChangesAsync();
 
-            return UserModel.ToDto(userModel);
+                switch (newUser.Role)
+                {
+                    case UserRolesEnum.TRAINEE:
+                        TraineeModel trainee = new TraineeModel(
+                            userModel.Id,
+                            newUser.FirstName,
+                            newUser.LastName,
+                            newUser.Email,
+                            newUser.TechStack,
+                            newUser.Status == UserStatusEnum.ACTIVE ? TraineeStatusEnum.ACTIVE : TraineeStatusEnum.INACTIVE
+                        );
+
+                        _context.Trainees.Add(trainee);
+                       
+                        break;
+
+                    case UserRolesEnum.MENTOR:
+                        MentorModel mentor = new MentorModel(
+                            userModel.Id,
+                            newUser.FirstName,
+                            newUser.LastName,
+                            newUser.Email,
+                            newUser.TechStack,
+                            newUser.Status == UserStatusEnum.ACTIVE ? MentorStatusEnum.ACTIVE : MentorStatusEnum.INACTIVE
+                        );
+                        
+                        _context.Mentor.Add(mentor);
+                        
+                        break;
+
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return UserModel.ToDto(userModel);
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
+
     }
 }

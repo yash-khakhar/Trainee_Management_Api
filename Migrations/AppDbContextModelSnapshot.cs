@@ -52,7 +52,13 @@ namespace TraineeManagement.api.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Mentor");
                 });
@@ -263,9 +269,26 @@ namespace TraineeManagement.api.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Trainees");
+                });
+
+            modelBuilder.Entity("TraineeManagement.api.Models.MentorModel", b =>
+                {
+                    b.HasOne("TraineeManagement.api.Models.UserModel", "User")
+                        .WithOne("Mentor")
+                        .HasForeignKey("TraineeManagement.api.Models.MentorModel", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TraineeManagement.api.Models.ReviewModel", b =>
@@ -321,6 +344,24 @@ namespace TraineeManagement.api.Migrations
                     b.Navigation("Mentor");
 
                     b.Navigation("Task");
+
+                    b.Navigation("Trainee");
+                });
+
+            modelBuilder.Entity("TraineeManagement.api.models.TraineeModel", b =>
+                {
+                    b.HasOne("TraineeManagement.api.Models.UserModel", "User")
+                        .WithOne("Trainee")
+                        .HasForeignKey("TraineeManagement.api.models.TraineeModel", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TraineeManagement.api.Models.UserModel", b =>
+                {
+                    b.Navigation("Mentor");
 
                     b.Navigation("Trainee");
                 });

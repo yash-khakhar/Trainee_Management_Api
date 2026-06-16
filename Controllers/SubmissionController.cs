@@ -8,7 +8,6 @@ namespace TraineeManagement.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
     public class SubmissionController : ControllerBase
     {
         private readonly ISubmissionService _submissionService;
@@ -21,6 +20,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> GetAllSubmissions()
         {
             IEnumerable<SubmissionResponse> submissionList = await _submissionService.GetSubmissionList();
@@ -29,6 +29,7 @@ namespace TraineeManagement.api.Controllers
 
 
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
         public async Task<IActionResult> GetSubmissionById(int id)
         {
 

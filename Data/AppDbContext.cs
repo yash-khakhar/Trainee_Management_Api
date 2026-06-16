@@ -68,6 +68,18 @@ namespace TraineeManagement.api.Data
 
             });
 
+            modelBuilder.Entity<UserModel>()
+            .HasOne(u => u.Trainee)
+            .WithOne(t => t.User)
+            .HasForeignKey<TraineeModel>(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserModel>()
+            .HasOne(u => u.Mentor)          
+            .WithOne(m => m.User)           
+            .HasForeignKey<MentorModel>(m => m.UserId) 
+            .OnDelete(DeleteBehavior.Cascade); 
+
 
         }
 

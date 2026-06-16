@@ -7,7 +7,6 @@ using TraineeManagement.api.Repository.Mentor;
 namespace TraineeManagement.api.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
     [ApiController]
     public class MentorController : ControllerBase
     {
@@ -20,6 +19,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
         public async Task<IActionResult> GetAllMentor()
         {
             IEnumerable<MentorResponse> mentorList = await _mentorService.GetMentorList();
@@ -28,6 +28,7 @@ namespace TraineeManagement.api.Controllers
 
         
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> GetMentorById(int id)
         {
             MentorResponse mentor = await _mentorService.GetMentorById(id);
@@ -36,6 +37,7 @@ namespace TraineeManagement.api.Controllers
 
         
         [HttpPost]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
         public async Task<IActionResult> AddMentor([FromBody] CreateMentorRequest mentorRequest)
         {
             MentorResponse mentor = await _mentorService.AddMentor(mentorRequest);
@@ -47,6 +49,7 @@ namespace TraineeManagement.api.Controllers
 
        
         [HttpPut("{id}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> UpdateMentor([FromRoute]int id, [FromBody] UpdateMentorRequest mentorRequest)
         {
             MentorResponse mentor = await _mentorService.UpdateMentor(id, mentorRequest);
@@ -59,6 +62,7 @@ namespace TraineeManagement.api.Controllers
 
         
         [HttpDelete("{id}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
         public async Task<IActionResult> DeleteMentor(int id)
         {
             bool isMentorDeleted = await _mentorService.DeleteMentorById(id);

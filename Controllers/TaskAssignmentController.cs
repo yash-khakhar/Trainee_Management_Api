@@ -6,7 +6,6 @@ using TraineeManagement.api.Repository.TaskAssignment;
 namespace TraineeManagement.api.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
     [ApiController]
     public class TaskAssignmentController : ControllerBase
     {
@@ -21,6 +20,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
         public async Task<IActionResult> GetAllTaskAssignments()
         {
             IEnumerable<TaskAssignmentResponse> taskList = await _taskAssignmentService.GetTaskAssignmentList();
@@ -29,6 +29,7 @@ namespace TraineeManagement.api.Controllers
 
 
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
         public async Task<IActionResult> GetTaskAssignmentById(int id)
         {
 
@@ -40,6 +41,7 @@ namespace TraineeManagement.api.Controllers
 
        
         [HttpPost]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> AddTaskAssignment([FromBody] CreateTaskAssignmentRequest taskRequest)
         {
             if (taskRequest == null) throw new Exception("Invalid Data Input");
@@ -51,6 +53,7 @@ namespace TraineeManagement.api.Controllers
 
         
         [HttpPut("{id}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> UpdateTaskAssignment(int id, [FromBody] UpdateTaskAssignmentRequest taskRequest)
         {
             if (taskRequest == null) throw new Exception("Invalid Data Input");

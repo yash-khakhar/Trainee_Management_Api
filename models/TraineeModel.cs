@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TraineeManagement.api.DTO.TraineeDto;
 using TraineeManagement.api.Enum;
+using TraineeManagement.api.Models;
 using TraineeManagement.api.Repository.Trainee;
 
 namespace TraineeManagement.api.models
@@ -16,9 +17,23 @@ namespace TraineeManagement.api.models
             Status = status;
         }
 
+        public TraineeModel(int id, string firstName, string lastName, string email, string techStack, TraineeStatusEnum status)
+        {
+            UserId = id;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            TechStack = techStack;
+            Status = status;
+        }
+
         [Key]
         public int Id { get; set; }
         
+        [Required]
+        public int UserId { get; set; }
+        public virtual UserModel User { get; set; } = null!;
+
         [Required]
         [StringLength(50, ErrorMessage = "First Name cannot be more than 50 characters")]
         public string FirstName { get; set; }
@@ -36,7 +51,7 @@ namespace TraineeManagement.api.models
 
         [EnumDataType(typeof(TraineeStatusEnum), ErrorMessage = "Status can be either ACTIVE or INACTIVE")]
         public TraineeStatusEnum Status { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
 
         public static TraineeResponse ToDto(TraineeModel traineeModel) 
