@@ -6,13 +6,27 @@ C# And ASP.NET CORE
 ## Database Used  
 MYSQL DB with Entity Framework ORM  
 
-## How to Run
+## Backend setup steps  
 step1: Clone the repo  git  
 step2: Open Project in visual studio IDE  
 step3: Run following commands for database migration .NET CLI  
     command 1: Add-Migration InitialMySQL    
     command 2: update-database  
 step4: click on Run application  
+
+## MySQL Setup Steps  
+-> Download mysql database and mysql workbench for viewing database using user interface.  
+-> While installing mysql database, you will be prompted to enter username and password. Make sure you remember these database crendials which will be helpful in connecting database with application.  
+-> For mysql database, you need to install following dotnet packages:  
+package: dotnet add package MySql.EntityFrameworkCore --version 10.0.7  
+
+## EF Core Migration commands  
+-> Add-Migration [Migration_Name]  
+-> update-database  
+
+## Login Credentials  
+-> First you need to register user as admin/trainee/mentor for testing the system.  
+-> you can use /api/Auth/register api for adding user.  
 
 ## API LIST For Trainee  
 1. [GET] /api/Trainee  
@@ -97,6 +111,23 @@ step4: click on Run application
 ## Global Exception Handling  
 -> Created centralized exception handling for unexpected errors.  
 -> Returning safe, consistent error messages to clients.  
+
+## Security Checklist  
+1. Password is stored as hash in database instead of raw string.    
+2. Api is protected using role-based jwt tokens.  
+3. Cors configuration is done for frontend application  
+4. Global Exception is configured to prevent application to crash from unexpected errors.  
+
+## Known Limitations  
+1. Entire application is using monolith architecture. So, if one service gets unexpected error entire application can be down.  
+2. Secret Key of JWT Token is still used as raw string instead of encrypting the key.  
+3. If jwt token of one user is known to another user, then he can use his token to misuse the role.  
+
+## Next Improvement Areas  
+1. We can develop micro-service architecture. So, all services are isolated from each other.  
+2. We can use queues such as RabbitMQ or Kafka for intraction between two micro services.  
+3. We can encrypt/hash the secret key of jwt token, so it is not exposed to other user in any cases.  
+4. We can also hash/encrypt the jwt token itself instead of sending raw token. So another user can not use token even it is known.  
 
 ## Challenges Faced
 1. I Faced challenges while creating the api. To overcome challenges i used help of official documentation of .NET Core and C#  
