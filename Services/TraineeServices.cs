@@ -26,6 +26,8 @@ namespace TraineeManagement.api.Services
 
         public async Task<TraineeResponse> AddTrainee(CreateTraineeRequest trainee)
         {
+            if (trainee.Status == null) throw new InvalidRequest("Invalid Request");
+
             TraineeModel traineeModel = new TraineeModel(
                     trainee.FirstName.ToLower(), 
                     trainee.LastName.ToLower(), 
@@ -110,7 +112,7 @@ namespace TraineeManagement.api.Services
                         trainee.LastName, 
                         trainee.Email, 
                         trainee.TechStack,
-                        trainee.Status,
+                        trainee.Status ?? TraineeStatusEnum.ACTIVE,
                         trainee.CreatedAt,
                         trainee.UpdatedAt
                      ))
@@ -142,7 +144,7 @@ namespace TraineeManagement.api.Services
                         trainee.LastName,
                         trainee.Email,
                         trainee.TechStack,
-                        trainee.Status,
+                        trainee.Status ?? TraineeStatusEnum.ACTIVE,
                         trainee.CreatedAt,
                         trainee.UpdatedAt
                         )

@@ -15,61 +15,16 @@ step3: Run following commands for database migration .NET CLI
 step4: click on Run application  
 
 ## API LIST For Trainee  
-1. [GET] /api/Health  
-    Response: {  
-        "status": "string",  
-        "applicationName": "string",  
-        "time": "2026-06-05T08:50:07.401Z"  
-    }  
-  
-2. [GET] /api/Trainee?searchKeyword=string  
-    Response:  
-    [  
-    {  
+1. [GET] /api/Trainee  
 
-        "id": "string",  
-        "firstName": "string",  
-        "lastName": "string",  
-        "email": "string",  
-        "techStack": "string",  
-        "status": "ACTIVE",  
-        "createdAt": "2026-06-05T08:56:33.575Z",  
-        "updatedAt": "2026-06-05T08:56:33.575Z"  
-    }  
-  ]  
+2. [GET] /api/Trainee?searchKeyword=string  
+      
+3. [POST] /api/Trainee    
   
-3. [POST] /api/Trainee  
-    Request Body:  
-    {  
-        "firstName": "string",  
-        "lastName": "string",  
-        "email": "user@example.com",  
-        "techStack": "string",  
-        "status": "ACTIVE"  
-    }  
-  
-4. [PUT] /api/Trainee  
-    Request Body:  
-    {  
-        "id": "string",  
-        "firstName": "string",  
-        "lastName": "string",  
-        "email": "user@example.com",  
-        "techStack": "string",  
-        "status": "ACTIVE"  
-    }  
+4. [PUT] /api/Trainee    
   
 5. [GET] /api/Trainee/{id}  
-    Request Path Param: id  
-    Response:  
-     {  
-        "id": "string",  
-        "firstName": "string",  
-        "lastName": "string",  
-        "email": "user@example.com",  
-        "techStack": "string",  
-        "status": "ACTIVE"  
-    }  
+    Request Path Param: id    
   
 6. [DELETE] /api/Trainee/{id}  
     Request Path Param: id  
@@ -77,31 +32,71 @@ step4: click on Run application
 
 ## API LIST For Users  
 1. [POST] /api/Auth/register  
-    Request body:  
-    {  
-        "username" : string,  
-        "email": string,  
-        "password": string,  
-        "role": "ADMIN || TRAINEE || MENTOR"  
-    }  
-    Response:  
-    {  
-        "id": int,  
-        "username": string,  
-        "role": string  
-    }  
 
 2. [POST] /api/Auth/login  
-    Request body:  
-    {  
-        "username": string,  
-        "password": string  
-    }  
+  
+## API LIST For Mentor  
+1. [GET] /api/Mentor   
+  
+2. [POST] /api/Mentor  
+  
+3. [PUT] /api/Trainee/{id}  
+  
+4. [GET] /api/Mentor/{id}  
+    Request Path Param: id  
+  
+5. [DELETE] /api/Trainee/{id}  
+    Request Path Param: id  
+    Response: 204 No Content  
+
+## API LIST For Learning Task    
+1. [GET] /api/LearningTask   
+  
+2. [POST] /api/LearningTask  
+  
+3. [PUT] /api/LearningTask/{id}  
+  
+4. [GET] /api/LearningTask/{id}  
+    Request Path Param: id  
+  
+5. [DELETE] /api/LearningTask/{id}  
+    Request Path Param: id  
+    Response: 204 No Content  
+
+## API LIST For Task Assignment    
+1. [GET] /api/TaskAssignment   
+  
+2. [POST] /api/TaskAssignment  
+  
+3. [PUT] /api/TaskAssignment/{id}  
+  
+4. [GET] /api/TaskAssignment/{id}  
+    Request Path Param: id  
+
+## API LIST For Submission    
+1. [GET] /api/Submissinon   
+  
+2. [POST] /api/Submission  
+  
+3. [GET] /api/Submission/{id}  
+    Request Path Param: id  
+
+## API LIST For Review      
+1. [GET] /api/Review  
+  
+2. [POST] /api/Review  
+  
+3. [GET] /api/Review/{id}  
+    Request Path Param: id    
 
 ## JWT Usage instruction  
 -> For accessing any /api/Trainee api, you need jwt token  
 -> To get jwt token, you need to login and provide correct username and password.  
 -> Login credentials will work if you are registed, if not then you need to register first using /api/Register api.  
+
+## Global Exception Handling  
+-> Created centralized exception handling for unexpected errors.  
+-> Returning safe, consistent error messages to clients.  
 
 ## Challenges Faced
 1. I Faced challenges while creating the api. To overcome challenges i used help of official documentation of .NET Core and C#  

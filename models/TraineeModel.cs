@@ -8,7 +8,7 @@ namespace TraineeManagement.api.models
 {
     public class TraineeModel: ITraineeRepo
     {
-        public TraineeModel(string firstName, string lastName, string email, string techStack, TraineeStatusEnum status)
+        public TraineeModel(string firstName, string lastName, string email, string techStack, TraineeStatusEnum? status)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -49,8 +49,9 @@ namespace TraineeManagement.api.models
         [Required(ErrorMessage = "TechStack must be provided")]
         public string TechStack { get; set; }
 
+        [Required(ErrorMessage = "Status is required")]
         [EnumDataType(typeof(TraineeStatusEnum), ErrorMessage = "Status can be either ACTIVE or INACTIVE")]
-        public TraineeStatusEnum Status { get; set; }
+        public TraineeStatusEnum? Status { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
 
@@ -63,7 +64,7 @@ namespace TraineeManagement.api.models
                     traineeModel.LastName,
                     traineeModel.Email,
                     traineeModel.TechStack,
-                    traineeModel.Status,
+                    traineeModel.Status ?? TraineeStatusEnum.ACTIVE,
                     traineeModel.CreatedAt,
                     traineeModel.UpdatedAt
                 );

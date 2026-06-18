@@ -80,6 +80,17 @@ namespace TraineeManagement.api.Middleware
                 _logger.LogError(ex, ex.Message);
                 await WriteErrorResponse(context, "Duplicate Username Exception", StatusCodes.Status400BadRequest, ex.Message);
             }
+            catch (JsonException ex)
+            {
+                _logger.LogError(ex, "Invalid Request Properties: {Message}", ex.Message);
+
+                await WriteErrorResponse(context, "Bad Request", StatusCodes.Status400BadRequest, "Invalid Request Properties");
+            }
+            catch(InvalidRequest ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                await WriteErrorResponse(context, "Invalid Request", StatusCodes.Status400BadRequest, ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An exception escaped the pipeline: {Message}", ex.Message);

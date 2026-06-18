@@ -5,7 +5,7 @@ namespace TraineeManagement.api.DTO.TraineeDto
 {
     public class CreateTraineeRequest
     {
-        public CreateTraineeRequest(string firstName, string lastName, string email, string techStack, TraineeStatusEnum status)
+        public CreateTraineeRequest(string firstName, string lastName, string email, string techStack, TraineeStatusEnum? status)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -29,9 +29,10 @@ namespace TraineeManagement.api.DTO.TraineeDto
         
         [Required(ErrorMessage = "TechStack must be provided")]
         public string TechStack { get; set; }
-        
+
+        [Required(ErrorMessage = "Status is required")]
         [EnumDataType(typeof(TraineeStatusEnum), ErrorMessage = "Status can be either ACTIVE or INACTIVE")]
-        public TraineeStatusEnum Status { get; set; }
+        public TraineeStatusEnum? Status { get; set; }
 
     }
 }

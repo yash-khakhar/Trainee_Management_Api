@@ -10,7 +10,7 @@ namespace TraineeManagement.api.Repository.Trainee
         string LastName { get; set; }
         string Email { get; set; }
         string TechStack { get; set; }
-        TraineeStatusEnum Status { get; set; }
+        TraineeStatusEnum? Status { get; set; }
         DateTime CreatedAt { get; set; }
         DateTime UpdatedAt { get; set; }
     }

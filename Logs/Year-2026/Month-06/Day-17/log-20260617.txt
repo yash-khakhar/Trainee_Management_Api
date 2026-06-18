@@ -1,0 +1,444 @@
+2026-06-17 13:27:56.918 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 13:27:57.534 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 13:27:57.535 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 13:27:58.683 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 13:27:58.684 +05:30 [INF] Hosting environment: Development
+2026-06-17 13:27:58.684 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 13:28:37.251 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Auth/login - application/json 54
+2026-06-17 13:28:37.365 +05:30 [INF] HTTP POST /api/Auth/login responded 307 in 61.2119 ms
+2026-06-17 13:28:37.393 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Auth/login - 307 0 null 170.1706ms
+2026-06-17 13:28:37.650 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Auth/login - application/json 54
+2026-06-17 13:28:37.981 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.AuthController.Login (TraineeManagement.api)'
+2026-06-17 13:28:38.065 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.UserDto.UserLoginResponse]] Login(TraineeManagement.api.DTO.UserDto.UserLoginRequestDto) on controller TraineeManagement.api.Controllers.AuthController (TraineeManagement.api).
+2026-06-17 13:28:44.539 +05:30 [INF] Executed DbCommand (37ms) [Parameters=[@userName='?' (Size = 50)], CommandType='"Text"', CommandTimeout='30']
+SELECT `u`.`Id`, `u`.`CreatedAt`, `u`.`Email`, `u`.`PasswordHash`, `u`.`Role`, `u`.`UpdatedAt`, `u`.`UserName`
+FROM `Users` AS `u`
+WHERE `u`.`UserName` = @userName
+LIMIT 1
+2026-06-17 13:28:45.264 +05:30 [INF] Login: admin is logged in!!
+2026-06-17 13:28:45.289 +05:30 [INF] Executing ObjectResult, writing value of type 'TraineeManagement.api.DTO.UserDto.UserLoginResponse'.
+2026-06-17 13:28:45.348 +05:30 [INF] Executed action TraineeManagement.api.Controllers.AuthController.Login (TraineeManagement.api) in 7259.5409ms
+2026-06-17 13:28:45.352 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.AuthController.Login (TraineeManagement.api)'
+2026-06-17 13:28:45.362 +05:30 [INF] HTTP POST /api/Auth/login responded 200 in 7711.0213 ms
+2026-06-17 13:28:45.393 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Auth/login - 200 null application/json; charset=utf-8 7743.7098ms
+2026-06-17 13:29:20.715 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 13:29:20.716 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 0.4881 ms
+2026-06-17 13:29:20.717 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 2.2778ms
+2026-06-17 13:29:20.723 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 13:29:20.947 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:29:20.967 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 13:29:21.659 +05:30 [INF] Executed DbCommand (13ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (Size = 4000), @p2='?' (Size = 50), @p3='?' (Size = 50), @p4='?' (DbType = Int32), @p5='?' (Size = 4000), @p6='?' (DbType = DateTime), @p7='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Trainees` (`CreatedAt`, `Email`, `FirstName`, `LastName`, `Status`, `TechStack`, `UpdatedAt`, `UserId`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Trainees`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2026-06-17 13:29:21.817 +05:30 [INF] POST: New Trainee. yash created!!
+2026-06-17 13:29:21.819 +05:30 [INF] Executing ObjectResult, writing value of type 'TraineeManagement.api.DTO.TraineeDto.TraineeResponse'.
+2026-06-17 13:29:21.843 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 875.2665ms
+2026-06-17 13:29:21.843 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:29:21.843 +05:30 [INF] HTTP POST /api/Trainee/ responded 200 in 1119.7429 ms
+2026-06-17 13:29:21.844 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 200 null application/json; charset=utf-8 1120.9239ms
+2026-06-17 13:30:52.335 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5220/api/Trainee - null null
+2026-06-17 13:30:52.337 +05:30 [INF] HTTP GET /api/Trainee responded 307 in 0.8381 ms
+2026-06-17 13:30:52.338 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5220/api/Trainee - 307 0 null 2.0511ms
+2026-06-17 13:30:52.346 +05:30 [INF] Request starting HTTP/2 GET https://localhost:7153/api/Trainee - null null
+2026-06-17 13:30:52.360 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.ListAllTrainee (TraineeManagement.api)'
+2026-06-17 13:30:52.383 +05:30 [INF] Route matched with {action = "ListAllTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ListAllTrainee(Int32, Int32, System.String, TraineeManagement.api.Enum.TraineeStatusEnum) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 13:30:52.750 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT `t`.`Id`, `t`.`FirstName`, `t`.`LastName`, `t`.`Email`, `t`.`TechStack`, `t`.`Status`, `t`.`CreatedAt`, `t`.`UpdatedAt`
+FROM `Trainees` AS `t`
+2026-06-17 13:30:52.756 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[TraineeManagement.api.DTO.TraineeDto.TraineeResponse, TraineeManagement.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-17 13:30:52.758 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.ListAllTrainee (TraineeManagement.api) in 374.3648ms
+2026-06-17 13:30:52.758 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.ListAllTrainee (TraineeManagement.api)'
+2026-06-17 13:30:52.759 +05:30 [INF] HTTP GET /api/Trainee responded 200 in 412.0756 ms
+2026-06-17 13:30:52.759 +05:30 [INF] Request finished HTTP/2 GET https://localhost:7153/api/Trainee - 200 null application/json; charset=utf-8 413.0035ms
+2026-06-17 13:41:23.173 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 13:41:23.479 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 13:41:23.480 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 13:41:25.268 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 13:41:25.268 +05:30 [INF] Hosting environment: Development
+2026-06-17 13:41:25.269 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 13:41:39.860 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 140
+2026-06-17 13:41:39.948 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 37.7847 ms
+2026-06-17 13:41:39.981 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 138.4282ms
+2026-06-17 13:41:40.201 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 140
+2026-06-17 13:41:40.728 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:41:40.816 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 13:41:46.672 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 5839.6751ms
+2026-06-17 13:41:46.676 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:41:46.702 +05:30 [ERR] Trainee Not Found
+TraineeManagement.api.CustomException.NotFoundException: Trainee Not Found
+   at TraineeManagement.api.Controllers.TraineeController.AddTrainee(CreateTraineeRequest trainee) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Controllers\TraineeController.cs:line 67
+   at lambda_method354(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at TraineeManagement.api.Middleware.HttpStatusCodeHandler.InvokeAsync(HttpContext context) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Middleware\HttpStatusCodeHandler.cs:line 23
+2026-06-17 13:41:46.772 +05:30 [INF] HTTP POST /api/Trainee/ responded 404 in 6569.4237 ms
+2026-06-17 13:41:46.783 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 404 null application/json 6581.957ms
+2026-06-17 13:42:23.767 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 13:42:23.768 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 0.2679 ms
+2026-06-17 13:42:23.768 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 1.5016ms
+2026-06-17 13:42:23.776 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 13:42:23.794 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:42:23.794 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 13:42:28.448 +05:30 [INF] Executed DbCommand (38ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (Size = 4000), @p2='?' (Size = 50), @p3='?' (Size = 50), @p4='?' (DbType = Int32), @p5='?' (Size = 4000), @p6='?' (DbType = DateTime), @p7='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Trainees` (`CreatedAt`, `Email`, `FirstName`, `LastName`, `Status`, `TechStack`, `UpdatedAt`, `UserId`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Trainees`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2026-06-17 13:42:28.703 +05:30 [INF] POST: New Trainee. yash created!!
+2026-06-17 13:42:28.735 +05:30 [INF] Executing ObjectResult, writing value of type 'TraineeManagement.api.DTO.TraineeDto.TraineeResponse'.
+2026-06-17 13:42:28.781 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 4986.0494ms
+2026-06-17 13:42:28.783 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:42:28.790 +05:30 [INF] HTTP POST /api/Trainee/ responded 200 in 5013.4086 ms
+2026-06-17 13:42:28.811 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 200 null application/json; charset=utf-8 5034.6362ms
+2026-06-17 13:45:39.888 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 13:45:40.227 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 13:45:40.230 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 13:45:42.555 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 13:45:42.556 +05:30 [INF] Hosting environment: Development
+2026-06-17 13:45:42.556 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 13:45:59.231 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 13:45:59.314 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 34.6458 ms
+2026-06-17 13:45:59.342 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 141.4183ms
+2026-06-17 13:45:59.576 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 13:46:00.138 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:46:00.216 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 13:46:05.547 +05:30 [INF] Executed DbCommand (42ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (Size = 4000), @p2='?' (Size = 50), @p3='?' (Size = 50), @p4='?' (DbType = Int32), @p5='?' (Size = 4000), @p6='?' (DbType = DateTime), @p7='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Trainees` (`CreatedAt`, `Email`, `FirstName`, `LastName`, `Status`, `TechStack`, `UpdatedAt`, `UserId`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Trainees`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2026-06-17 13:46:05.763 +05:30 [INF] POST: New Trainee. yash created!!
+2026-06-17 13:46:05.801 +05:30 [INF] Executing ObjectResult, writing value of type 'TraineeManagement.api.DTO.TraineeDto.TraineeResponse'.
+2026-06-17 13:46:05.858 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 5628.6774ms
+2026-06-17 13:46:05.860 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:46:05.868 +05:30 [INF] HTTP POST /api/Trainee/ responded 200 in 6290.8529 ms
+2026-06-17 13:46:05.900 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 200 null application/json; charset=utf-8 6323.8088ms
+2026-06-17 13:56:09.656 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 13:56:09.867 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 13:56:09.868 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 13:56:09.904 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 13:56:09.904 +05:30 [INF] Hosting environment: Development
+2026-06-17 13:56:09.904 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 13:57:00.711 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 13:57:00.767 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 26.8392 ms
+2026-06-17 13:57:00.788 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 90.5264ms
+2026-06-17 13:57:00.935 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 13:57:01.252 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:57:01.291 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 13:57:01.530 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 234.95ms
+2026-06-17 13:57:01.532 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:57:01.595 +05:30 [ERR] An exception escaped the pipeline: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+System.InvalidOperationException: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ConstructorParameterIncompleteBinding(Type parentType)
+   at System.Text.Json.Serialization.Converters.ObjectWithParameterizedConstructorConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState& bufferState, JsonReaderState& jsonReaderState, ReadStack& readStack, T& value)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsObjectAsync(PipeReader utf8Json, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder.BindModelAsync(ModelBindingContext bindingContext)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.ParameterBinder.BindModelAsync(ActionContext actionContext, IModelBinder modelBinder, IValueProvider valueProvider, ParameterDescriptor parameter, ModelMetadata metadata, Object value, Object container)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerBinderDelegateProvider.<>c__DisplayClass0_0.<<CreateBinderDelegate>g__Bind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at TraineeManagement.api.Middleware.HttpStatusCodeHandler.InvokeAsync(HttpContext context) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Middleware\HttpStatusCodeHandler.cs:line 23
+2026-06-17 13:57:01.644 +05:30 [ERR] HTTP POST /api/Trainee/ responded 500 in 708.8261 ms
+2026-06-17 13:57:01.652 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 500 null application/json 717.4194ms
+2026-06-17 13:57:43.102 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 13:57:43.342 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 13:57:43.343 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 13:57:43.380 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 13:57:43.380 +05:30 [INF] Hosting environment: Development
+2026-06-17 13:57:43.380 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 13:57:53.127 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 13:57:53.185 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 28.0943 ms
+2026-06-17 13:57:53.204 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 89.9865ms
+2026-06-17 13:57:53.375 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 13:57:53.689 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:57:53.730 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 13:57:54.008 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 272.9302ms
+2026-06-17 13:57:54.009 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 13:57:54.044 +05:30 [ERR] An exception escaped the pipeline: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+System.InvalidOperationException: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ConstructorParameterIncompleteBinding(Type parentType)
+   at System.Text.Json.Serialization.Converters.ObjectWithParameterizedConstructorConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState& bufferState, JsonReaderState& jsonReaderState, ReadStack& readStack, T& value)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsObjectAsync(PipeReader utf8Json, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder.BindModelAsync(ModelBindingContext bindingContext)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.ParameterBinder.BindModelAsync(ActionContext actionContext, IModelBinder modelBinder, IValueProvider valueProvider, ParameterDescriptor parameter, ModelMetadata metadata, Object value, Object container)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerBinderDelegateProvider.<>c__DisplayClass0_0.<<CreateBinderDelegate>g__Bind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at TraineeManagement.api.Middleware.HttpStatusCodeHandler.InvokeAsync(HttpContext context) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Middleware\HttpStatusCodeHandler.cs:line 23
+2026-06-17 13:57:54.082 +05:30 [ERR] HTTP POST /api/Trainee/ responded 500 in 707.2169 ms
+2026-06-17 13:57:54.089 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 500 null application/json 715.119ms
+2026-06-17 14:00:41.493 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 14:00:41.701 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 14:00:41.702 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 14:00:41.763 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 14:00:41.763 +05:30 [INF] Hosting environment: Development
+2026-06-17 14:00:41.763 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 14:00:51.461 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 14:00:51.494 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 14.0997 ms
+2026-06-17 14:00:51.506 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 52.4403ms
+2026-06-17 14:00:51.691 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 14:00:51.997 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:00:52.031 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 14:00:52.337 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 298.1798ms
+2026-06-17 14:00:52.339 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:00:52.382 +05:30 [ERR] An exception escaped the pipeline: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+System.InvalidOperationException: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ConstructorParameterIncompleteBinding(Type parentType)
+   at System.Text.Json.Serialization.Converters.ObjectWithParameterizedConstructorConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState& bufferState, JsonReaderState& jsonReaderState, ReadStack& readStack, T& value)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsObjectAsync(PipeReader utf8Json, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder.BindModelAsync(ModelBindingContext bindingContext)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.ParameterBinder.BindModelAsync(ActionContext actionContext, IModelBinder modelBinder, IValueProvider valueProvider, ParameterDescriptor parameter, ModelMetadata metadata, Object value, Object container)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerBinderDelegateProvider.<>c__DisplayClass0_0.<<CreateBinderDelegate>g__Bind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at TraineeManagement.api.Middleware.HttpStatusCodeHandler.InvokeAsync(HttpContext context) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Middleware\HttpStatusCodeHandler.cs:line 23
+2026-06-17 14:00:52.420 +05:30 [ERR] HTTP POST /api/Trainee/ responded 500 in 728.0971 ms
+2026-06-17 14:00:52.425 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 500 null application/json 734.491ms
+2026-06-17 14:01:36.801 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 14:01:37.033 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 14:01:37.033 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 14:01:37.086 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 14:01:37.086 +05:30 [INF] Hosting environment: Development
+2026-06-17 14:01:37.086 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 14:01:53.513 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 14:01:53.570 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 24.8467 ms
+2026-06-17 14:01:53.586 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 87.4455ms
+2026-06-17 14:01:53.711 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 14:01:54.044 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:01:54.073 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 14:01:54.311 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 233.6039ms
+2026-06-17 14:01:54.312 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:01:54.362 +05:30 [ERR] An exception escaped the pipeline: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+System.InvalidOperationException: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ConstructorParameterIncompleteBinding(Type parentType)
+   at System.Text.Json.Serialization.Converters.ObjectWithParameterizedConstructorConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState& bufferState, JsonReaderState& jsonReaderState, ReadStack& readStack, T& value)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsObjectAsync(PipeReader utf8Json, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder.BindModelAsync(ModelBindingContext bindingContext)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.ParameterBinder.BindModelAsync(ActionContext actionContext, IModelBinder modelBinder, IValueProvider valueProvider, ParameterDescriptor parameter, ModelMetadata metadata, Object value, Object container)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerBinderDelegateProvider.<>c__DisplayClass0_0.<<CreateBinderDelegate>g__Bind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at TraineeManagement.api.Middleware.HttpStatusCodeHandler.InvokeAsync(HttpContext context) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Middleware\HttpStatusCodeHandler.cs:line 23
+2026-06-17 14:01:54.397 +05:30 [ERR] HTTP POST /api/Trainee/ responded 500 in 685.3065 ms
+2026-06-17 14:01:54.400 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 500 null application/json 689.8067ms
+2026-06-17 14:03:08.890 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 14:03:09.092 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 14:03:09.092 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 14:03:09.160 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 14:03:09.160 +05:30 [INF] Hosting environment: Development
+2026-06-17 14:03:09.160 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 14:03:31.132 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 14:03:31.177 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 23.0234 ms
+2026-06-17 14:03:31.193 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 69.779ms
+2026-06-17 14:03:31.342 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 14:03:31.624 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:03:31.649 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 14:03:31.875 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 221.6671ms
+2026-06-17 14:03:31.877 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:03:31.922 +05:30 [ERR] An exception escaped the pipeline: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+System.InvalidOperationException: Each parameter in the deserialization constructor on type 'TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest' must bind to an object property or field on deserialization. Each parameter name and type must match with a property or field on the object. Fields are only considered when 'JsonSerializerOptions.IncludeFields' is enabled. The name match can be case-insensitive.
+   at System.Text.Json.ThrowHelper.ThrowInvalidOperationException_ConstructorParameterIncompleteBinding(Type parentType)
+   at System.Text.Json.Serialization.Converters.ObjectWithParameterizedConstructorConverter`1.OnTryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value)
+   at System.Text.Json.Serialization.JsonConverter`1.TryRead(Utf8JsonReader& reader, Type typeToConvert, JsonSerializerOptions options, ReadStack& state, T& value, Boolean& isPopulatedValue)
+   at System.Text.Json.Serialization.JsonConverter`1.ReadCore(Utf8JsonReader& reader, T& value, JsonSerializerOptions options, ReadStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.ContinueDeserialize[TReadBufferState,TStream](TReadBufferState& bufferState, JsonReaderState& jsonReaderState, ReadStack& readStack, T& value)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsync[TReadBufferState,TStream](TStream utf8Json, TReadBufferState bufferState, CancellationToken cancellationToken)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.DeserializeAsObjectAsync(PipeReader utf8Json, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.Formatters.SystemTextJsonInputFormatter.ReadRequestBodyAsync(InputFormatterContext context, Encoding encoding)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder.BindModelAsync(ModelBindingContext bindingContext)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.ParameterBinder.BindModelAsync(ActionContext actionContext, IModelBinder modelBinder, IValueProvider valueProvider, ParameterDescriptor parameter, ModelMetadata metadata, Object value, Object container)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerBinderDelegateProvider.<>c__DisplayClass0_0.<<CreateBinderDelegate>g__Bind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at TraineeManagement.api.Middleware.HttpStatusCodeHandler.InvokeAsync(HttpContext context) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Middleware\HttpStatusCodeHandler.cs:line 23
+2026-06-17 14:03:31.960 +05:30 [ERR] HTTP POST /api/Trainee/ responded 500 in 617.8148 ms
+2026-06-17 14:03:31.968 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 500 null application/json 625.671ms
+2026-06-17 14:04:27.275 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 14:04:27.470 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 14:04:27.470 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 14:04:27.500 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 14:04:27.500 +05:30 [INF] Hosting environment: Development
+2026-06-17 14:04:27.500 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 14:04:37.063 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 14:04:37.119 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 23.0692 ms
+2026-06-17 14:04:37.134 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 83.9638ms
+2026-06-17 14:04:37.268 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 14:04:37.621 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:04:37.647 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 14:04:41.479 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 3824.4871ms
+2026-06-17 14:04:41.480 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:04:41.498 +05:30 [ERR] An exception escaped the pipeline: Invalid Request
+System.Exception: Invalid Request
+   at TraineeManagement.api.Services.TraineeServices.AddTrainee(CreateTraineeRequest trainee) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Services\TraineeServices.cs:line 29
+   at TraineeManagement.api.Controllers.TraineeController.AddTrainee(CreateTraineeRequest trainee) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Controllers\TraineeController.cs:line 70
+   at lambda_method354(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at TraineeManagement.api.Middleware.HttpStatusCodeHandler.InvokeAsync(HttpContext context) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Middleware\HttpStatusCodeHandler.cs:line 23
+2026-06-17 14:04:41.538 +05:30 [ERR] HTTP POST /api/Trainee/ responded 500 in 4269.9707 ms
+2026-06-17 14:04:41.546 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 500 null application/json 4278.1167ms
+2026-06-17 14:08:01.997 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 14:08:02.180 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 14:08:02.181 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 14:08:02.215 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 14:08:02.215 +05:30 [INF] Hosting environment: Development
+2026-06-17 14:08:02.215 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 14:08:17.697 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 160
+2026-06-17 14:08:17.753 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 23.5727 ms
+2026-06-17 14:08:17.768 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 83.0235ms
+2026-06-17 14:08:17.932 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 160
+2026-06-17 14:08:18.204 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:08:18.232 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 14:08:20.458 +05:30 [INF] Executed DbCommand (26ms) [Parameters=[@p0='?' (DbType = DateTime), @p1='?' (Size = 4000), @p2='?' (Size = 50), @p3='?' (Size = 50), @p4='?' (DbType = Int32), @p5='?' (Size = 4000), @p6='?' (DbType = DateTime), @p7='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO `Trainees` (`CreatedAt`, `Email`, `FirstName`, `LastName`, `Status`, `TechStack`, `UpdatedAt`, `UserId`)
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+SELECT `Id`
+FROM `Trainees`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+2026-06-17 14:08:20.541 +05:30 [INF] POST: New Trainee. yash created!!
+2026-06-17 14:08:20.550 +05:30 [INF] Executing ObjectResult, writing value of type 'TraineeManagement.api.DTO.TraineeDto.TraineeResponse'.
+2026-06-17 14:08:20.579 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 2338.2267ms
+2026-06-17 14:08:20.580 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:08:20.586 +05:30 [INF] HTTP POST /api/Trainee/ responded 200 in 2653.7866 ms
+2026-06-17 14:08:20.606 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 200 null application/json; charset=utf-8 2674.2952ms
+2026-06-17 14:09:00.354 +05:30 [INF] User profile is available. Using 'C:\Users\yash.khakhar\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-17 14:09:00.615 +05:30 [INF] Now listening on: https://localhost:7153
+2026-06-17 14:09:00.616 +05:30 [INF] Now listening on: http://localhost:5220
+2026-06-17 14:09:00.694 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-17 14:09:00.694 +05:30 [INF] Hosting environment: Development
+2026-06-17 14:09:00.694 +05:30 [INF] Content root path: C:\Users\yash.khakhar\source\repos\TraineeManagement.Api
+2026-06-17 14:22:56.344 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5220/api/Trainee/ - application/json 115
+2026-06-17 14:22:56.381 +05:30 [INF] HTTP POST /api/Trainee/ responded 307 in 15.7938 ms
+2026-06-17 14:22:56.396 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5220/api/Trainee/ - 307 0 null 58.5327ms
+2026-06-17 14:22:56.583 +05:30 [INF] Request starting HTTP/2 POST https://localhost:7153/api/Trainee/ - application/json 115
+2026-06-17 14:22:56.892 +05:30 [INF] Executing endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:22:56.936 +05:30 [INF] Route matched with {action = "AddTrainee", controller = "Trainee"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[TraineeManagement.api.DTO.TraineeDto.TraineeResponse]] AddTrainee(TraineeManagement.api.DTO.TraineeDto.CreateTraineeRequest) on controller TraineeManagement.api.Controllers.TraineeController (TraineeManagement.api).
+2026-06-17 14:23:06.809 +05:30 [INF] Executed action TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api) in 9861.9341ms
+2026-06-17 14:23:06.811 +05:30 [INF] Executed endpoint 'TraineeManagement.api.Controllers.TraineeController.AddTrainee (TraineeManagement.api)'
+2026-06-17 14:23:06.835 +05:30 [ERR] Invalid Request
+TraineeManagement.api.CustomException.InvalidRequest: Invalid Request
+   at TraineeManagement.api.Services.TraineeServices.AddTrainee(CreateTraineeRequest trainee) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Services\TraineeServices.cs:line 29
+   at TraineeManagement.api.Controllers.TraineeController.AddTrainee(CreateTraineeRequest trainee) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Controllers\TraineeController.cs:line 70
+   at lambda_method354(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at TraineeManagement.api.Middleware.HttpStatusCodeHandler.InvokeAsync(HttpContext context) in C:\Users\yash.khakhar\source\repos\TraineeManagement.Api\Middleware\HttpStatusCodeHandler.cs:line 23
+2026-06-17 14:23:06.870 +05:30 [INF] HTTP POST /api/Trainee/ responded 400 in 10286.6320 ms
+2026-06-17 14:23:06.876 +05:30 [INF] Request finished HTTP/2 POST https://localhost:7153/api/Trainee/ - 400 null application/json 10293.4419ms

@@ -64,7 +64,7 @@ namespace TraineeManagement.api.Controllers
 
             if (trainee == null)
             {
-                throw new NotFoundException("Trainee Not Found");
+                throw new NotFoundException("Invalid Request");
             }
 
             TraineeResponse traineeRespone = await _traineeServices.AddTrainee(trainee);
