@@ -18,6 +18,7 @@ namespace TraineeManagement.api.Data
         public DbSet<TaskAssignmentModel> TaskAssignment { get; set; }
         public DbSet<SubmissionModel> Submission { get; set; }
         public DbSet<ReviewModel> Review { get; set; }
+        public DbSet<SubmissionFileModel> SubmissionFile { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -78,8 +79,25 @@ namespace TraineeManagement.api.Data
             .HasOne(u => u.Mentor)          
             .WithOne(m => m.User)           
             .HasForeignKey<MentorModel>(m => m.UserId) 
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SubmissionFileModel>()
+            .HasOne(f => f.Submission)
+            .WithMany(s => s.SubmissionFiles)
+            .HasForeignKey(f => f.SubmissionId)
             .OnDelete(DeleteBehavior.Cascade); 
 
+
+            // table properties constraints
+            modelBuilder.Entity<SubmissionFileModel>()
+                .Property(f => f.FilePath)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            modelBuilder.Entity<SubmissionFileModel>()
+                .Property(f => f.FileName)
+                .IsRequired()
+                .HasMaxLength(255);
 
         }
 

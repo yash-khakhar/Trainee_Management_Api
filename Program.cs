@@ -3,10 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Serilog.Formatting.Compact;
+using Serilog.Formatting.Json;
 using System.Text;
 using System.Text.Json.Serialization;
 using TraineeManagement.api.Data;
+using TraineeManagement.api.Helper;
 using TraineeManagement.api.Middleware;
+using TraineeManagement.api.Redis.Repository;
+using TraineeManagement.api.Redis.Service;
+using TraineeManagement.api.Repository.FileStorage;
 using TraineeManagement.api.Repository.Mentor;
 using TraineeManagement.api.Repository.Password;
 using TraineeManagement.api.Repository.Review;
@@ -27,9 +33,9 @@ var logPath = $"Logs/Year-{year}/Month-{month}/Day-{day}/log-.txt";
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .WriteTo.File(
+        formatter: new JsonFormatter(),
         path: logPath,
-        rollingInterval: RollingInterval.Day, 
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+        rollingInterval: RollingInterval.Day
     )
     .CreateLogger();
 
@@ -88,6 +94,10 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
+builder.Services.Configure<FileStorageOptions>(
+    builder.Configuration.GetSection("FileStorageSettings")
+);
+
 
 builder.Services.AddScoped<ITraineeService, TraineeServices>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -97,9 +107,21 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskAssignmentService, TaskAssignmentService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+builder.Services.AddScoped<IRedisCacheRepo, RedisCacheService>();
+
+builder.Services.AddTransient<SubmissionFileValidator>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));
+
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnectionString;
+    options.InstanceName = "Dev:";
+});
 
 
 var app = builder.Build();

@@ -22,7 +22,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
+        
         public async Task<IActionResult> ListAllTrainee(
             [FromQuery(Name = "pageNumber")] int pageNumber = 0,
             [FromQuery(Name = "pageSize")] int pageSize = 0,
@@ -49,7 +49,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetTraineeById")]
-        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
+        
         public async Task<ActionResult<TraineeResponse>> GetTraineeById(int id)
         {
             TraineeResponse trainee = await _traineeServices.GetTraineeById(id);

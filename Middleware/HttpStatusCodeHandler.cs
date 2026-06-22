@@ -70,7 +70,6 @@ namespace TraineeManagement.api.Middleware
             }
             catch (NotFoundException ex)
             {
-                // Not found Trainee, Mentor or Task Exception
                 _logger.LogError(ex, ex.Message);
                 await WriteErrorResponse(context, "Resource Not Found", StatusCodes.Status404NotFound, ex.Message);
             }
@@ -83,13 +82,17 @@ namespace TraineeManagement.api.Middleware
             catch (JsonException ex)
             {
                 _logger.LogError(ex, "Invalid Request Properties: {Message}", ex.Message);
-
                 await WriteErrorResponse(context, "Bad Request", StatusCodes.Status400BadRequest, "Invalid Request Properties");
             }
             catch(InvalidRequest ex)
             {
                 _logger.LogError(ex, ex.Message);
                 await WriteErrorResponse(context, "Invalid Request", StatusCodes.Status400BadRequest, ex.Message);
+            }
+            catch(InvalidFileSubmission ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                await WriteErrorResponse(context, "Invalid Submission File Request", StatusCodes.Status413RequestEntityTooLarge, ex.Message);
             }
             catch (Exception ex)
             {

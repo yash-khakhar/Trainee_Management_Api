@@ -58,7 +58,7 @@ namespace TraineeManagement.api.Services
 
             if (!await _passwordService.VerifyPassword(userDto.Password, user))
             {
-                throw new Exception("Invalid username or password");
+                throw new NotFoundException("Invalid username or password");
             }
 
             string jwtToken = JwtHelper.GenerateJwtToken(user, _config);

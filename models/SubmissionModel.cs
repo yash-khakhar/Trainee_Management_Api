@@ -7,6 +7,8 @@ namespace TraineeManagement.api.Models
 {
     public class SubmissionModel : ISubmissionRepo
     {
+        public SubmissionModel() { }
+
         public SubmissionModel(int taskAssignmentId, string submissionUrl, string notes, DateTime submittedDate, SubmissionStatusEnum status)
         {
             TaskAssignmentId = taskAssignmentId;
@@ -23,10 +25,10 @@ namespace TraineeManagement.api.Models
         public int TaskAssignmentId { get; set; }
 
         [Required]
-        public string SubmissionUrl { get; set; }
+        public string SubmissionUrl { get; set; } = string.Empty;
 
         [Required]
-        public string Notes { get; set; }
+        public string Notes { get; set; } = string.Empty;
 
         [Required]
         public DateTime SubmittedDate { get; set; }
@@ -35,6 +37,8 @@ namespace TraineeManagement.api.Models
         public SubmissionStatusEnum Status { get; set; }
 
         public TaskAssignmentModel? TaskAssignment { get; set; }
+
+        public ICollection<SubmissionFileModel> SubmissionFiles { get; set; } = new List<SubmissionFileModel>();
 
         public static SubmissionResponse ToDto(SubmissionModel submissionModel)
         {

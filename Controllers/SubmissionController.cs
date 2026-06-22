@@ -20,7 +20,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
+        //[Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> GetAllSubmissions()
         {
             IEnumerable<SubmissionResponse> submissionList = await _submissionService.GetSubmissionList();
@@ -29,7 +29,7 @@ namespace TraineeManagement.api.Controllers
 
 
         [HttpGet("{id}")]
-        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
+        //[Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
         public async Task<IActionResult> GetSubmissionById(int id)
         {
 
@@ -41,14 +41,34 @@ namespace TraineeManagement.api.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = $"{nameof(UserRolesEnum.TRAINEE)}")]
-        public async Task<IActionResult> AddSubmission([FromBody] CreateSubmissionRequest submissionRequest)
+        //[Authorize(Roles = $"{nameof(UserRolesEnum.TRAINEE)}")]
+        public async Task<IActionResult> AddSubmission([FromForm] CreateSubmissionRequest submissionRequest, List<IFormFile> files)
         {
             if (submissionRequest == null) throw new Exception("Invalid Data Input");
 
-            SubmissionResponse submission = await _submissionService.AddSubmission(submissionRequest);
+            SubmissionResponse submission = await _submissionService.AddSubmission(submissionRequest, files);
             _logger.LogInformation($"NEW Submission ADDED");
             return StatusCode(StatusCodes.Status201Created, submission);
+            
+        }
+
+
+        [HttpGet("submission-files/{submissionFileId}")]
+        public async Task<IActionResult> DownloadFile(int submissionFileId)
+        {
+            var (fileBytes, contentType, fileName) = await _submissionService.DownloadFileAsync(submissionFileId);
+
+            return File(fileBytes, contentType, fileName);
+
+        }
+
+        [HttpDelete("submission-files/{submissionFileId}")]
+        public async Task<IActionResult> DeleteSubmission(int submissionFileId)
+        {
+            await _submissionService.DeleteSubmissionAsync(submissionFileId);
+
+            return StatusCode(StatusCodes.Status204NoContent);
+
         }
 
     }

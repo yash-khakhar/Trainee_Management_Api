@@ -4,6 +4,8 @@ using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.TaskAssignmentDto;
 using TraineeManagement.api.Enum;
 using TraineeManagement.api.Models;
+using TraineeManagement.api.Redis.CacheKeys;
+using TraineeManagement.api.Redis.Repository;
 using TraineeManagement.api.Repository.TaskAssignment;
 
 namespace TraineeManagement.api.Services
@@ -11,10 +13,12 @@ namespace TraineeManagement.api.Services
     public class TaskAssignmentService : ITaskAssignmentService
     {
         private AppDbContext _context;
+        private readonly IRedisCacheRepo _redisCacheRepo;
 
-        public TaskAssignmentService(AppDbContext context)
+        public TaskAssignmentService(AppDbContext context, IRedisCacheRepo redisCacheRepo)
         {
             _context = context;
+            _redisCacheRepo = redisCacheRepo;
         }
         public async Task<TaskAssignmentResponse> AddTaskAssignment(CreateTaskAssignmentRequest taskAssignment)
         {
@@ -43,13 +47,69 @@ namespace TraineeManagement.api.Services
 
             await _context.SaveChangesAsync();
 
+            // removing all trainee key from cache
+            await _redisCacheRepo.RemoveItem(TaskAssignmentCacheKey.AllTaskAssignment);
+
             return TaskAssignmentModel.ToDto(taskAssignmentModel);
         }
 
         public async Task<TaskAssignmentResponse> GetTaskAssignmentById(int id)
         {
-            TaskAssignmentResponse? taskAssignment = await _context.TaskAssignment
-                    .Where(t => t.Id == id)
+
+            string cacheKey = $"{TaskAssignmentCacheKey.SingleTaskAssignmnet}:{id}";
+
+            TaskAssignmentResponse? cachedData = await _redisCacheRepo.GetItem<TaskAssignmentResponse>(cacheKey);
+
+            if (cachedData != null)
+            {
+                return cachedData;
+            }
+            else
+            {
+
+                TaskAssignmentResponse? taskAssignment = await _context.TaskAssignment
+                        .Where(t => t.Id == id)
+                        .Select(t => new TaskAssignmentResponse(
+                            t.Id, 
+                            t.TraineeId, 
+                            t.MentorId, 
+                            t.TaskId, 
+                            t.AssignedDate, 
+                            t.DueDate, 
+                            t.Status, 
+                            t.Remarks == null ? string.Empty : t.Remarks
+                        ))
+                        .FirstOrDefaultAsync();
+
+                if (taskAssignment == null) throw new NotFoundException("Task Assignment Not Found");
+
+                await _redisCacheRepo.SetItem<TaskAssignmentResponse>(cacheKey, taskAssignment);
+
+                return taskAssignment;
+
+            }
+
+
+        }
+
+        public async Task<IEnumerable<TaskAssignmentResponse>> GetTaskAssignmentList()
+        {
+
+            string cacheKey = TaskAssignmentCacheKey.AllTaskAssignment;
+
+            IEnumerable<TaskAssignmentResponse>? cachedData = await _redisCacheRepo.GetItem<IEnumerable<TaskAssignmentResponse>>(cacheKey);
+
+            if (cachedData != null)
+            {
+                return cachedData;
+            }
+            else
+            {
+
+                List<TaskAssignmentResponse> taskAssignmentList = await _context.TaskAssignment
+                    .Include(t => t.Trainee)
+                    .Include(t => t.Mentor)
+                    .Include(t => t.Task)
                     .Select(t => new TaskAssignmentResponse(
                         t.Id, 
                         t.TraineeId, 
@@ -59,34 +119,17 @@ namespace TraineeManagement.api.Services
                         t.DueDate, 
                         t.Status, 
                         t.Remarks == null ? string.Empty : t.Remarks
-                    ))
-                    .FirstOrDefaultAsync();
 
-            if (taskAssignment == null) throw new NotFoundException("Task Assignment Not Found");
+                     ))
+                    .ToListAsync();
 
-            return taskAssignment;
-        }
+                await _redisCacheRepo.SetItem<IEnumerable<TaskAssignmentResponse>>(cacheKey, taskAssignmentList);
 
-        public async Task<IEnumerable<TaskAssignmentResponse>> GetTaskAssignmentList()
-        {
-            List<TaskAssignmentResponse> taskAssignmentList = await _context.TaskAssignment
-                .Include(t => t.Trainee)
-                .Include(t => t.Mentor)
-                .Include(t => t.Task)
-                .Select(t => new TaskAssignmentResponse(
-                    t.Id, 
-                    t.TraineeId, 
-                    t.MentorId, 
-                    t.TaskId, 
-                    t.AssignedDate, 
-                    t.DueDate, 
-                    t.Status, 
-                    t.Remarks == null ? string.Empty : t.Remarks
+                return taskAssignmentList;
 
-                 ))
-                .ToListAsync();
+            }
 
-            return taskAssignmentList;
+
         }
 
         public async Task<TaskAssignmentResponse> UpdateTaskAssignment(int id, UpdateTaskAssignmentRequest taskAssignment)
@@ -103,6 +146,10 @@ namespace TraineeManagement.api.Services
             if (taskAssignment.Remarks != null) task.Remarks = taskAssignment.Remarks;
 
             await _context.SaveChangesAsync();
+
+            // removing all trainee key from cache
+            await _redisCacheRepo.RemoveItem(TaskAssignmentCacheKey.AllTaskAssignment);
+            await _redisCacheRepo.RemoveItem($"{TaskAssignmentCacheKey.SingleTaskAssignmnet}:{id}");
 
             return TaskAssignmentModel.ToDto(task);
         }

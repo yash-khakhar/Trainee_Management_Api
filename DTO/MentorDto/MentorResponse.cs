@@ -19,10 +19,10 @@ namespace TraineeManagement.api.DTO.MentorDto
         public MentorResponse() { }
 
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Expertise { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = String.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Expertise { get; set; } = string.Empty;
         public MentorStatusEnum Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

@@ -30,7 +30,7 @@ namespace TraineeManagement.api.DTO.UserDto
         [Required(ErrorMessage = "TechStack must be provided")]
         public required string TechStack { get; set; }
 
-        [EnumDataType(typeof(TraineeStatusEnum), ErrorMessage = "Status can be either ACTIVE or INACTIVE")]
+        [EnumDataType(typeof(UserStatusEnum), ErrorMessage = "Status can be either ACTIVE or INACTIVE")]
         public required UserStatusEnum Status { get; set; }
     }
 }

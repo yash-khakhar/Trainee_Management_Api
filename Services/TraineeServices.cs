@@ -4,6 +4,8 @@ using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.TraineeDto;
 using TraineeManagement.api.Enum;
 using TraineeManagement.api.models;
+using TraineeManagement.api.Redis.CacheKeys;
+using TraineeManagement.api.Redis.Repository;
 using TraineeManagement.api.Repository.Trainee;
 
 namespace TraineeManagement.api.Services
@@ -11,17 +13,25 @@ namespace TraineeManagement.api.Services
     public class TraineeServices : ITraineeService
     {
         private AppDbContext _context;
+        private readonly IRedisCacheRepo _redisCacheRepo;
+        private readonly ILogger<SubmissionService> _logger;
 
-        public TraineeServices(AppDbContext context)
+        public TraineeServices(AppDbContext context, IRedisCacheRepo redisCacheRepo, ILogger<SubmissionService> logger)
         {
             _context = context;
+            _redisCacheRepo = redisCacheRepo;
+            _logger = logger;
         }
 
         private async Task<TraineeModel> FindTraineeById(int id)
         {
+
             TraineeModel? trainee = await _context.Trainees.FindAsync(id);
             if (trainee == null) throw new Exception("Trainee Not Found");
-            else return trainee;
+            else
+            {
+                return trainee;
+            }
         }
 
         public async Task<TraineeResponse> AddTrainee(CreateTraineeRequest trainee)
@@ -41,38 +51,98 @@ namespace TraineeManagement.api.Services
             _context.Trainees.Add(traineeModel);
             await _context.SaveChangesAsync();
 
+            // removing all trainee key from cache
+            await _redisCacheRepo.RemoveItem(TraineeCacheKey.AllTrainees);
+
             return TraineeModel.ToDto(traineeModel);
         }
 
         public async Task<bool> DeleteTraineeById(int id)
         {
             TraineeModel? trainee = await _context.Trainees.FindAsync(id);
+            
             if (trainee == null) return false;
+            
             _context.Trainees.Remove(trainee);
+            
             await _context.SaveChangesAsync();
+
+            // removing all trainee key from cache
+            await _redisCacheRepo.RemoveItem(TraineeCacheKey.AllTrainees);
+            await _redisCacheRepo.RemoveItem($"{TraineeCacheKey.SingleTrainee}:{id}");
+
             return true;
         }
 
         public async Task<TraineeResponse> GetTraineeById(int id)
         {
- 
-            TraineeResponse? trainee = await _context.Trainees
-             .Where(p => p.Id == id)
-            .Select(p => new TraineeResponse(p.Id, p.FirstName, p.LastName, p.Email, p.TechStack, p.Status, p.CreatedAt, p.UpdatedAt))
-             .FirstOrDefaultAsync();
 
-            if (trainee == null) throw new NotFoundException("Trainee Not Found");
-            else return trainee;
+            string cacheKey = $"{TraineeCacheKey.SingleTrainee}:{id}";
+
+            TraineeResponse? cachedData = await _redisCacheRepo.GetItem<TraineeResponse>(cacheKey);
+
+            if (cachedData != null)
+            {
+                return cachedData;
+            }
+            else
+            {
+
+                _logger.LogInformation(
+                    "Trainee ID {TraineeId} not found in Redis cache using key {RedisKey}. Falling back to MySQL DB to fetch.",
+                    id,
+                    cacheKey
+                );
+
+
+                TraineeResponse? trainee = await _context.Trainees
+                 .Where(p => p.Id == id)
+                .Select(p => new TraineeResponse(p.Id, p.FirstName, p.LastName, p.Email, p.TechStack, p.Status, p.CreatedAt, p.UpdatedAt))
+                 .FirstOrDefaultAsync();
+
+                if (trainee == null) throw new NotFoundException("Trainee Not Found");
+                else
+                {
+
+                    await _redisCacheRepo.SetItem<TraineeResponse>(cacheKey, trainee);
+                
+                    return trainee;
+
+                }
+
+            }
             
         }
 
         public async Task<IEnumerable<TraineeResponse>> GetTraineeList()
         {
-            var traineeList = await _context.Trainees
-            .Select(p => new TraineeResponse(p.Id, p.FirstName, p.LastName, p.Email, p.TechStack, p.Status, p.CreatedAt, p.UpdatedAt))
-            .ToListAsync();
 
-            return traineeList;
+            string cacheKey = TraineeCacheKey.AllTrainees;
+
+            IEnumerable<TraineeResponse>? cachedData = await _redisCacheRepo.GetItem<IEnumerable<TraineeResponse>>(cacheKey);
+
+            if(cachedData != null)
+            {
+                return cachedData;
+            }
+            else
+            {
+
+                _logger.LogInformation(
+                   "Trainee List not found in Redis cache using key {RedisKey}. Falling back to MySQL DB to fetch.",
+                   cacheKey
+               );
+
+                var traineeList = await _context.Trainees
+                .Select(p => new TraineeResponse(p.Id, p.FirstName, p.LastName, p.Email, p.TechStack, p.Status, p.CreatedAt, p.UpdatedAt))
+                .ToListAsync();
+
+                await _redisCacheRepo.SetItem<IEnumerable<TraineeResponse>>(cacheKey, traineeList);
+
+                return traineeList;
+
+            }
+
         }
 
         public async Task<TraineeResponse> UpdateTrainee(UpdateTraineeRequest updateTraineeRequest)
@@ -93,32 +163,54 @@ namespace TraineeManagement.api.Services
 
             await _context.SaveChangesAsync();
 
+            // removing all trainee key from cache
+            await _redisCacheRepo.RemoveItem(TraineeCacheKey.AllTrainees);
+            await _redisCacheRepo.RemoveItem($"{TraineeCacheKey.SingleTrainee}:{updateTraineeRequest.Id}");
+
             return TraineeModel.ToDto(trainee);
         }
 
         public async Task<IEnumerable<TraineeResponse>> SearchTrainee(string searchKeyword)
         {
-            var traineeList = await _context.Trainees
-                .Where(
-                    trainee => trainee.FirstName.Contains(searchKeyword) || 
-                    trainee.LastName.Contains(searchKeyword) || 
-                    trainee.Email.Contains(searchKeyword) || 
-                    trainee.TechStack.Contains(searchKeyword
-                ))
-                .Select(trainee => 
-                    new TraineeResponse(
-                        trainee.Id, 
-                        trainee.FirstName, 
-                        trainee.LastName, 
-                        trainee.Email, 
-                        trainee.TechStack,
-                        trainee.Status ?? TraineeStatusEnum.ACTIVE,
-                        trainee.CreatedAt,
-                        trainee.UpdatedAt
-                     ))
-                .ToListAsync();
 
-            return traineeList;
+            string cacheKey = $"{TraineeCacheKey.TraineeSearch}:${searchKeyword}";
+
+            IEnumerable<TraineeResponse>? cachedData = await _redisCacheRepo.GetItem<IEnumerable<TraineeResponse>>(cacheKey);
+
+            if(cachedData != null)
+            {
+                return cachedData;
+            }
+            else
+            {
+
+                var traineeList = await _context.Trainees
+                    .Where(
+                        trainee => trainee.FirstName.Contains(searchKeyword) || 
+                        trainee.LastName.Contains(searchKeyword) || 
+                        trainee.Email.Contains(searchKeyword) || 
+                        trainee.TechStack.Contains(searchKeyword
+                    ))
+                    .Select(trainee => 
+                        new TraineeResponse(
+                            trainee.Id, 
+                            trainee.FirstName, 
+                            trainee.LastName, 
+                            trainee.Email, 
+                            trainee.TechStack,
+                            trainee.Status ?? TraineeStatusEnum.ACTIVE,
+                            trainee.CreatedAt,
+                            trainee.UpdatedAt
+                         ))
+                    .ToListAsync();
+
+
+                await _redisCacheRepo.SetItem<IEnumerable<TraineeResponse>>(cacheKey, traineeList);
+
+                return traineeList;
+
+            }
+
         }
 
         public async Task<TraineeSearchResultDto> SearchWithPagination(int pageNumber, int pageSize, string search, TraineeStatusEnum role)
