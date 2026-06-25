@@ -2,18 +2,21 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Polly;
 using Serilog;
 using Serilog.Formatting.Json;
 using System.Text;
 using System.Text.Json.Serialization;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.Helper;
+using TraineeManagement.api.HttpClientFactory;
 using TraineeManagement.api.Middleware;
 using TraineeManagement.api.Redis.Repository;
 using TraineeManagement.api.Redis.Service;
 using TraineeManagement.api.Repository.FileStorage;
 using TraineeManagement.api.Repository.Mentor;
 using TraineeManagement.api.Repository.Password;
+using TraineeManagement.api.Repository.ProcessingJob;
 using TraineeManagement.api.Repository.RabbitMQ;
 using TraineeManagement.api.Repository.Review;
 using TraineeManagement.api.Repository.Submission;
@@ -109,6 +112,7 @@ builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 builder.Services.AddScoped<IRedisCacheRepo, RedisCacheService>();
+builder.Services.AddScoped<IProcessingJobService, ProcessingJobService>();
 
 builder.Services.AddTransient<SubmissionFileValidator>();
 
@@ -124,6 +128,36 @@ builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = redisConnectionString;
     options.InstanceName = "Dev:";
+});
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<CorrelationIdHandler>();
+
+builder.Services.AddHttpClient<DummyTraineeService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5062/");
+    client.Timeout = TimeSpan.FromSeconds(15); // Total overall lifecycle timeout guard
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+    client.DefaultRequestHeaders.Add("User-Agent", "ConsumerAPI-Client");
+})
+.AddHttpMessageHandler<CorrelationIdHandler>()
+// Adds standard 5-layered pipeline: Request Timeout, Retry, Circuit Breaker, Attempt Timeout, Rate Limiter
+.AddStandardResilienceHandler(options =>
+{
+    // 1. Configure Retries (Only triggers for transient HTTP status codes like 5xx or 408)
+    options.Retry.MaxRetryAttempts = 3;
+    options.Retry.Delay = TimeSpan.FromSeconds(2);
+    options.Retry.BackoffType = DelayBackoffType.Exponential;
+    options.Retry.UseJitter = true; // Prevents overwhelming downstream service
+
+    // 2. Configure Circuit Breaker (Trips if too many failures occur consecutively)
+    options.CircuitBreaker.FailureRatio = 0.5; // Trip if 50% of requests fail in a block
+    options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
+    options.CircuitBreaker.MinimumThroughput = 8; // At least 8 requests must pass through before calculating ratio
+    options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(15); // How long circuit stays open
+
+    // 3. Finite Attempt Timeout (Limits how long an individual retry attempt can take)
+    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(4);
 });
 
 

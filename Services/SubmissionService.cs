@@ -1,5 +1,4 @@
-﻿using Google.Protobuf;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.SubmissionDto;
@@ -60,7 +59,6 @@ namespace TraineeManagement.api.Services
 
             if (submissionRequest.SubmittedDate > dueDate) throw new Exception("You cannot submit task after due date!");
 
-
             //fetching or generating correlation id
             var correlationId = _httpContextAccessor.HttpContext?.Request.Headers["X-Correlation-ID"].ToString();
             if (string.IsNullOrEmpty(correlationId))
@@ -75,7 +73,6 @@ namespace TraineeManagement.api.Services
                 submissionRequest.SubmittedDate,
                 Enum.SubmissionStatusEnum.QUEUED
             );
-
 
             var physicallyWrittenPaths = new List<string>();
 
@@ -152,10 +149,7 @@ namespace TraineeManagement.api.Services
 
                         _context.ProcessingJob.Add(job);
 
-                        var headers = new Dictionary<string, object>
-                        {
-                            { "x-item-count", 1 } 
-                        };
+                        await _context.SaveChangesAsync();
 
                         await _rabbitMqPublisher.PublishAsync(
                             exchange: RabbitMqConfig.SubmissionExchangeName,
@@ -185,8 +179,6 @@ namespace TraineeManagement.api.Services
 
                 // removing old cache entry
                 await _redisCacheRepo.RemoveItem(SubmissionCacheKey.AllSubmissions);
-
-                await _context.SaveChangesAsync();
 
                 return SubmissionModel.ToDto(submissionModel);
 

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.DTO.TraineeDto;
 using TraineeManagement.api.Enum;
+using TraineeManagement.api.HttpClientFactory;
 using TraineeManagement.api.Repository.Trainee;
 
 namespace TraineeManagement.api.Controllers
@@ -15,10 +17,12 @@ namespace TraineeManagement.api.Controllers
 
         private readonly ITraineeService _traineeServices;
         private readonly ILogger<TraineeController> _logger;
-        public TraineeController(ITraineeService traineeServices, ILogger<TraineeController> logger)
+        private readonly DummyTraineeService _dummyTraineeService;
+        public TraineeController(ITraineeService traineeServices, ILogger<TraineeController> logger, DummyTraineeService dummyTraineeService)
         {
             _traineeServices = traineeServices;
             _logger = logger;
+            _dummyTraineeService = dummyTraineeService;
         }
 
         [HttpGet]
@@ -105,5 +109,17 @@ namespace TraineeManagement.api.Controllers
 
         }
 
+        [HttpGet("dummy-trainee/{id}")]
+        public async Task<IActionResult> GetDummyTraineeData(int id, CancellationToken cancellationToken)
+        {
+            var outgoingCorrelationId = Activity.Current?.RootId
+                              ?? HttpContext.TraceIdentifier;
+
+            Console.WriteLine($"[CONSUMER API] Outgoing Request! Correlation ID: {outgoingCorrelationId}");
+
+            var trainee = await _dummyTraineeService.GetTraineeById(id, cancellationToken);
+            return Ok(trainee);
+
+        }
     }
 }

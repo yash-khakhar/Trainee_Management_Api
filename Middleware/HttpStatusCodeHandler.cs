@@ -51,7 +51,7 @@ namespace TraineeManagement.api.Middleware
                 string technicalMessage = ex.InnerException?.Message ?? ex.Message;
                 string clearMessage = $"Invalid input data format: {technicalMessage}";
 
-                await WriteErrorResponse(context, "Model Validation Error", StatusCodes.Status400BadRequest, clearMessage);
+                await WriteErrorResponse(context, "Bad Request Exception", StatusCodes.Status400BadRequest, clearMessage);
             }
             catch (DbUpdateException ex) when (ex.InnerException is MySqlException mysqlEx)
             {
@@ -105,6 +105,13 @@ namespace TraineeManagement.api.Middleware
 
                 await WriteErrorResponse(context, "Client Closed Request", StatusCodes.Status499ClientClosedRequest, ex.Message);
 
+            }
+            catch (ArgumentException ex)
+            {
+                // Validation errors instantly returned back to user without looping retries
+                _logger.LogWarning($"Validation Error: {ex.Message}");
+
+                await WriteErrorResponse(context, "Validation Error", StatusCodes.Status400BadRequest, ex.Message);
             }
             catch (Exception ex)
             {
