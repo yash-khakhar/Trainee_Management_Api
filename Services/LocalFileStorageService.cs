@@ -13,7 +13,14 @@ namespace TraineeManagement.api.Services
         {
             string configuredPath = configuration["FileStorageSettings:StorageRootPath"] ?? "Uploads/Submissions";
 
-            _absoluteStoragePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, configuredPath));
+            string baseUserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            _absoluteStoragePath = Path.Combine(baseUserProfile, configuredPath);
+
+            if (!Directory.Exists(_absoluteStoragePath))
+            {
+                Directory.CreateDirectory(_absoluteStoragePath);
+            }
         }
 
         public async Task<string> CalculateChecksumAsync(IFormFile file)
@@ -66,10 +73,43 @@ namespace TraineeManagement.api.Services
             return await File.ReadAllBytesAsync(fullPath);
         }
 
+        public Stream DownloadFileStream(string relativePath)
+        {
+            string fullPath = Path.Combine(_absoluteStoragePath, relativePath);
+
+            if (!File.Exists(fullPath))
+            {
+                throw new NotFoundException("The physical file could not be found on the storage disk.");
+            }
+
+            // Open the file as a stream.
+            // because the Controller needs to keep it open while transmitting to the client.
+            return new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true);
+        }
+
+
         public bool isFileExists(string relativePath)
         {
             string fullPath = Path.Combine(_absoluteStoragePath, relativePath);
             return File.Exists(fullPath);
+        }
+
+        public async Task<string> CalculateChecksumAsync(string relativePath)
+        {
+            string fullPath = Path.Combine(_absoluteStoragePath, relativePath);
+
+            if (!File.Exists(fullPath))
+            {
+                throw new NotFoundException($"Cannot calculate checksum. File not found at: {fullPath}");
+            }
+
+            using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 4096, useAsync: true))
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = await sha256.ComputeHashAsync(stream);
+                return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+            }
+
         }
     }
 }

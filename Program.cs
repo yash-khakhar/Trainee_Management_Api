@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using Serilog.Formatting.Compact;
 using Serilog.Formatting.Json;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -15,6 +14,7 @@ using TraineeManagement.api.Redis.Service;
 using TraineeManagement.api.Repository.FileStorage;
 using TraineeManagement.api.Repository.Mentor;
 using TraineeManagement.api.Repository.Password;
+using TraineeManagement.api.Repository.RabbitMQ;
 using TraineeManagement.api.Repository.Review;
 using TraineeManagement.api.Repository.Submission;
 using TraineeManagement.api.Repository.Task;
@@ -111,6 +111,9 @@ builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 builder.Services.AddScoped<IRedisCacheRepo, RedisCacheService>();
 
 builder.Services.AddTransient<SubmissionFileValidator>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));

@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="../TraineeManagement.Shared/TraineeManagement.Shared.csproj" />
+  <Project Path="../TraineeManagement.WorkerService/TraineeManagement.WorkerService.csproj" />
   <Project Path="TraineeManagement.api.csproj" />
 </Solution>

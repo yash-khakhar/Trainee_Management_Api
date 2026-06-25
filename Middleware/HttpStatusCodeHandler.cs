@@ -94,6 +94,18 @@ namespace TraineeManagement.api.Middleware
                 _logger.LogError(ex, ex.Message);
                 await WriteErrorResponse(context, "Invalid Submission File Request", StatusCodes.Status413RequestEntityTooLarge, ex.Message);
             }
+            catch(RabbitMqException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                await WriteErrorResponse(context, "Internal Server Error", StatusCodes.Status500InternalServerError, "Internal Server Error");
+            }
+            catch(OperationCanceledException ex)
+            {
+                _logger.LogWarning("Download aborted: User network is gone");
+
+                await WriteErrorResponse(context, "Client Closed Request", StatusCodes.Status499ClientClosedRequest, ex.Message);
+
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An exception escaped the pipeline: {Message}", ex.Message);

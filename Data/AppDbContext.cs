@@ -19,6 +19,7 @@ namespace TraineeManagement.api.Data
         public DbSet<SubmissionModel> Submission { get; set; }
         public DbSet<ReviewModel> Review { get; set; }
         public DbSet<SubmissionFileModel> SubmissionFile { get; set; }
+        public DbSet<ProcessingJobModel> ProcessingJob { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

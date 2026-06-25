@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Google.Protobuf;
+using Microsoft.EntityFrameworkCore;
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.SubmissionDto;
@@ -7,7 +8,10 @@ using TraineeManagement.api.Models;
 using TraineeManagement.api.Redis.CacheKeys;
 using TraineeManagement.api.Redis.Repository;
 using TraineeManagement.api.Repository.FileStorage;
+using TraineeManagement.api.Repository.RabbitMQ;
 using TraineeManagement.api.Repository.Submission;
+using TraineeManagement.Shared.Contracts;
+using TraineeManagement.Shared.RabbitMq;
 
 namespace TraineeManagement.api.Services
 {
@@ -18,13 +22,17 @@ namespace TraineeManagement.api.Services
         private readonly SubmissionFileValidator _submissionFileValidator;
         private readonly IRedisCacheRepo _redisCacheRepo;
         private readonly ILogger<SubmissionService> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IRabbitMqPublisher _rabbitMqPublisher;
 
         public SubmissionService(
             AppDbContext context,
             IFileStorageService storageService,
             SubmissionFileValidator submissionFileValidator,
             IRedisCacheRepo redisCacheRepo,
-            ILogger<SubmissionService> logger
+            ILogger<SubmissionService> logger,
+            IHttpContextAccessor httpContextAccessor,
+            IRabbitMqPublisher rabbitMqPublisher
         )
         {
             _context = context;
@@ -37,6 +45,10 @@ namespace TraineeManagement.api.Services
 
             _logger = logger;
 
+            _httpContextAccessor = httpContextAccessor;
+
+            _rabbitMqPublisher = rabbitMqPublisher;
+
         }
 
         public async Task<SubmissionResponse> AddSubmission(CreateSubmissionRequest submissionRequest, List<IFormFile> files)
@@ -48,13 +60,22 @@ namespace TraineeManagement.api.Services
 
             if (submissionRequest.SubmittedDate > dueDate) throw new Exception("You cannot submit task after due date!");
 
+
+            //fetching or generating correlation id
+            var correlationId = _httpContextAccessor.HttpContext?.Request.Headers["X-Correlation-ID"].ToString();
+            if (string.IsNullOrEmpty(correlationId))
+            {
+                correlationId = Guid.NewGuid().ToString();
+            }
+
             SubmissionModel submissionModel = new SubmissionModel(
                 submissionRequest.TaskAssignmentId,
                 submissionRequest.SubmissionUrl,
                 submissionRequest.Notes,
                 submissionRequest.SubmittedDate,
-                submissionRequest.Status
+                Enum.SubmissionStatusEnum.QUEUED
             );
+
 
             var physicallyWrittenPaths = new List<string>();
 
@@ -84,6 +105,7 @@ namespace TraineeManagement.api.Services
                         }
 
                         string uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+
                         string finalRelativePath = await _storageService.SaveFileAsync(file, uniqueFileName);
 
                         physicallyWrittenPaths.Add(finalRelativePath);
@@ -105,22 +127,94 @@ namespace TraineeManagement.api.Services
                 _context.Submission.Add(submissionModel);
                 await _context.SaveChangesAsync();
 
-                // remove submission data from cache
+                try
+                {
+                    if (physicallyWrittenPaths.Any())
+                    {
+                        var integrationEvent = new SubmissionProcessingRequested
+                        {
+                            MessageId = Guid.NewGuid(),
+                            CorrelationId = correlationId,
+                            RequestedAt = DateTime.UtcNow,
+                            ContractVersion = "1.0.0",
+                            SubmissionId = submissionModel.Id
+                        };
+
+                        //Initiate a job
+                        ProcessingJobModel job = new ProcessingJobModel(
+                            integrationEvent.MessageId,
+                            integrationEvent.CorrelationId,
+                            0,
+                            "",
+                            Enum.ProcessingJobStatusEnum.QUEUED,
+                            DateTime.UtcNow
+                        );
+
+                        _context.ProcessingJob.Add(job);
+
+                        var headers = new Dictionary<string, object>
+                        {
+                            { "x-item-count", 1 } 
+                        };
+
+                        await _rabbitMqPublisher.PublishAsync(
+                            exchange: RabbitMqConfig.SubmissionExchangeName,
+                            routingKey: RabbitMqConfig.SubmissionRoutingKey,
+                            message: integrationEvent,
+                            correlationId: correlationId
+                        );
+                    }
+                    else
+                    {
+                        submissionModel.Status = Enum.SubmissionStatusEnum.SUBMITTED;
+                        await _context.SaveChangesAsync();
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                    _logger.LogError(ex, "Infrastructure failure (RabbitMQ) for Submission ID {id}. Marking as FAILED.", submissionModel.Id);
+
+                    submissionModel.Status = Enum.SubmissionStatusEnum.FAILED;
+                    await _context.SaveChangesAsync();
+
+                    throw;
+                }
+
+
+                // removing old cache entry
                 await _redisCacheRepo.RemoveItem(SubmissionCacheKey.AllSubmissions);
 
+                await _context.SaveChangesAsync();
+
                 return SubmissionModel.ToDto(submissionModel);
+
             }
             catch (InvalidFileSubmission)
             {
+                CleanUpPhysicalFiles(physicallyWrittenPaths);
                 throw;
             }
             catch (Exception)
             {
-                foreach (var path in physicallyWrittenPaths)
-                {
-                    _storageService.DeleteFile(path);
-                }
+                CleanUpPhysicalFiles(physicallyWrittenPaths);
                 throw;
+            }
+        }
+
+        private void CleanUpPhysicalFiles(List<string> paths)
+        {
+            foreach (var file in paths)
+            {
+                try
+                {
+                    _storageService.DeleteFile(file);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to clean up file at path: {Path}", file);
+                }
             }
         }
 
@@ -206,7 +300,7 @@ namespace TraineeManagement.api.Services
 
         }
 
-        public async Task<(byte[] FileBytes, string ContentType, string FileName)> DownloadFileAsync(int fileMetadataId)
+        public async Task<(Stream FileStream, string ContentType, string FileName)> DownloadFileAsync(int fileMetadataId, CancellationToken cancellationToken)
         {
             var fileRecord = await _context.SubmissionFile
                 .FirstOrDefaultAsync(f => f.Id == fileMetadataId);
@@ -221,9 +315,11 @@ namespace TraineeManagement.api.Services
                 throw new NotFoundException("The requested file record does not exist.");
             }
 
-            byte[] fileBytes = await _storageService.DownloadFile(fileRecord.FilePath);
+            //byte[] fileBytes = await _storageService.DownloadFile(fileRecord.FilePath);
 
-            return (fileBytes, fileRecord.ContentType, fileRecord.FileName);
+            Stream fileStream = _storageService.DownloadFileStream(fileRecord.FilePath);
+
+            return (fileStream, fileRecord.ContentType, fileRecord.FileName);
         }
 
         public async Task<bool> DeleteSubmissionAsync(int id)

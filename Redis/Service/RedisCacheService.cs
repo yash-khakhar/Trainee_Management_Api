@@ -8,41 +8,76 @@ namespace TraineeManagement.api.Redis.Service
     {
         
         private readonly IDistributedCache _cache;
+        private readonly ILogger<RedisCacheService> _logger;
 
-        public RedisCacheService(IDistributedCache cache)
+        public RedisCacheService(IDistributedCache cache, ILogger<RedisCacheService> logger)
         {
             _cache = cache;
+
+            _logger = logger;
         }
 
         public async Task<T?> GetItem<T>(string cacheKey)
         {
-            string? cachedData = await _cache.GetStringAsync(cacheKey);
-
-            if (string.IsNullOrEmpty(cachedData))
+            try
             {
+
+                string? cachedData = await _cache.GetStringAsync(cacheKey);
+
+                if (string.IsNullOrEmpty(cachedData))
+                {
+                    return default;
+                }
+
+                return JsonSerializer.Deserialize<T>(cachedData);
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogWarning(ex, "Redis is offline or timed out. Returning null to force DB fallback.");
+
                 return default;
             }
-
-            return JsonSerializer.Deserialize<T>(cachedData);
 
         }
 
         public async Task RemoveItem(string key)
         {
-            await _cache.RemoveAsync(key);
+
+            try
+            {
+                await _cache.RemoveAsync(key);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Redis is offline or timed out. Returning null to force DB fallback.");
+            }
+
         }
 
         public async Task SetItem<T>(string cacheKey, T item)
         {
-            var cacheOptions = new DistributedCacheEntryOptions
+            try
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                //SlidingExpiration = TimeSpan.FromMinutes(2)
-            };
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                    //SlidingExpiration = TimeSpan.FromMinutes(2)
+                };
 
-            string serializedData = JsonSerializer.Serialize(item);
+                string serializedData = JsonSerializer.Serialize(item);
 
-            await _cache.SetStringAsync(cacheKey, serializedData, cacheOptions);
+                await _cache.SetStringAsync(cacheKey, serializedData, cacheOptions);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Redis is offline or timed out. Returning null to force DB fallback.");
+            }
+
+
         }
     }
 }

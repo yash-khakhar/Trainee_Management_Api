@@ -1,11 +1,10 @@
 ﻿namespace TraineeManagement.api.Enum
 {
-    public enum SubmissionStatusEnum
+    public enum ProcessingJobStatusEnum
     {
-        SUBMITTED,
-        RESUBMITTED,
         QUEUED,
         PROCESSING,
+        COMPLETED,
         FAILED
     }
 }

@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TraineeManagement.api.DTO.SubmissionDto;
-using TraineeManagement.api.Enum;
 using TraineeManagement.api.Repository.Submission;
 
 namespace TraineeManagement.api.Controllers
@@ -56,9 +54,9 @@ namespace TraineeManagement.api.Controllers
         [HttpGet("submission-files/{submissionFileId}")]
         public async Task<IActionResult> DownloadFile(int submissionFileId)
         {
-            var (fileBytes, contentType, fileName) = await _submissionService.DownloadFileAsync(submissionFileId);
+            var (fileStream, contentType, fileName) = await _submissionService.DownloadFileAsync(submissionFileId, HttpContext.RequestAborted);
 
-            return File(fileBytes, contentType, fileName);
+            return File(fileStream, contentType, fileName);
 
         }
 
