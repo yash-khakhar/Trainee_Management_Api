@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TraineeManagement.api.DTO.ProcessingJobDto;
+using TraineeManagement.api.Enum;
 using TraineeManagement.api.Repository.ProcessingJob;
 
 namespace TraineeManagement.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
     public class ProcessingJobController : ControllerBase
     {
 

@@ -6,7 +6,7 @@ namespace TraineeManagement.api.Repository.Submission
     {
         public Task<IEnumerable<SubmissionResponse>> GetSubmissionList();
         public Task<SubmissionResponse> GetSubmissionById(int id);
-        public Task<SubmissionResponse> AddSubmission(CreateSubmissionRequest submissionRequest, List<IFormFile> files);
+        public Task<SubmissionResponse> AddSubmission(CreateSubmissionRequest submissionRequest, List<IFormFile> files, string correlationId);
 
         public Task<(Stream FileStream, string ContentType, string FileName)> DownloadFileAsync(int fileMetadataId, CancellationToken cancellationToken);
         public Task<bool> DeleteSubmissionAsync(int id);

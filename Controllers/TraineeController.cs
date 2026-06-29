@@ -110,6 +110,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet("dummy-trainee/{id}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.TRAINEE)}")]
         public async Task<IActionResult> GetDummyTraineeData(int id, CancellationToken cancellationToken)
         {
             var outgoingCorrelationId = Activity.Current?.RootId

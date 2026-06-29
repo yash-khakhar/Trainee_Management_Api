@@ -123,6 +123,12 @@ namespace TraineeManagement.api.Services
 
             if(cachedData != null)
             {
+
+                _logger.LogInformation(
+                   "Trainee List found in Redis cache using key {RedisKey}.",
+                   cacheKey
+               );
+
                 return cachedData;
             }
             else

@@ -8,19 +8,26 @@ namespace TraineeManagement.api.Services
     {
 
         private readonly string _absoluteStoragePath;
+        private readonly ILogger<LocalFileStorageService> _logger;
 
-        public LocalFileStorageService(IConfiguration configuration)
+        public LocalFileStorageService(IConfiguration configuration, ILogger<LocalFileStorageService> logger)
         {
             string configuredPath = configuration["FileStorageSettings:StorageRootPath"] ?? "Uploads/Submissions";
 
-            string baseUserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            //string baseUserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            _absoluteStoragePath = Path.Combine(baseUserProfile, configuredPath);
+            //_absoluteStoragePath = Path.Combine(baseUserProfile,configuredPath);
+
+            _absoluteStoragePath = Path.GetFullPath(configuredPath);
+
+            //_absoluteStoragePath = configuration["FileStorageSettings:StorageRootPath"] ?? "Uploads/Submissions";
 
             if (!Directory.Exists(_absoluteStoragePath))
             {
                 Directory.CreateDirectory(_absoluteStoragePath);
             }
+
+            _logger = logger;
         }
 
         public async Task<string> CalculateChecksumAsync(IFormFile file)
@@ -90,7 +97,20 @@ namespace TraineeManagement.api.Services
 
         public bool isFileExists(string relativePath)
         {
-            string fullPath = Path.Combine(_absoluteStoragePath, relativePath);
+            //string fullPath = Path.Combine(_absoluteStoragePath, relativePath);
+
+            string fileName = Path.GetFileName(relativePath);
+
+            string fullPath = Path.Combine(_absoluteStoragePath, fileName);
+
+            // Hardcode the known absolute path that matches your Docker container exactly
+            //string absoluteDockerPath = $"/App/Uploads/Submissions/{fileName}";
+
+            _logger.LogInformation($"[DEBUG] _absoluteStoragePath: {_absoluteStoragePath}");
+            _logger.LogInformation($"[DEBUG] relativePath parameter: {relativePath}");
+            //_logger.LogInformation($"[DEBUG] Computed fullPath checked by .NET: {fullPath}");
+            //_logger.LogInformation($"[DEBUG] Does .NET see it? {File.Exists(fullPath)}");
+
             return File.Exists(fullPath);
         }
 

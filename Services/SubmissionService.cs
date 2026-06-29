@@ -50,7 +50,7 @@ namespace TraineeManagement.api.Services
 
         }
 
-        public async Task<SubmissionResponse> AddSubmission(CreateSubmissionRequest submissionRequest, List<IFormFile> files)
+        public async Task<SubmissionResponse> AddSubmission(CreateSubmissionRequest submissionRequest, List<IFormFile> files, string correlationId)
         {
 
             DateTime dueDate = await _context.TaskAssignment
@@ -60,7 +60,7 @@ namespace TraineeManagement.api.Services
             if (submissionRequest.SubmittedDate > dueDate) throw new Exception("You cannot submit task after due date!");
 
             //fetching or generating correlation id
-            var correlationId = _httpContextAccessor.HttpContext?.Request.Headers["X-Correlation-ID"].ToString();
+            //var correlationId = _httpContextAccessor.HttpContext?.Request.Headers["X-Correlation-ID"].ToString();
             if (string.IsNullOrEmpty(correlationId))
             {
                 correlationId = Guid.NewGuid().ToString();
@@ -219,6 +219,12 @@ namespace TraineeManagement.api.Services
 
             if (cachedData != null)
             {
+                _logger.LogInformation(
+                    "Submission ID {SubmissionId} found in Redis cache using key {RedisKey}.",
+                    id,
+                    cacheKey
+                );
+
                 return cachedData;
             }
             else
@@ -262,6 +268,12 @@ namespace TraineeManagement.api.Services
 
             if (cachedData != null)
             {
+
+                _logger.LogInformation(
+                   "Submission List found in Redis cache using key {RedisKey}.",
+                   cacheKey
+               );
+
                 return cachedData;
             }
             else

@@ -5,12 +5,12 @@ using TraineeManagement.api.CustomException;
 
 namespace TraineeManagement.api.Middleware
 {
-    public class HttpStatusCodeHandler
+    public class GlobalExceptionHandler
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<HttpStatusCodeHandler> _logger;
+        private readonly ILogger<GlobalExceptionHandler> _logger;
 
-        public HttpStatusCodeHandler(RequestDelegate next, ILogger<HttpStatusCodeHandler> logger)
+        public GlobalExceptionHandler(RequestDelegate next, ILogger<GlobalExceptionHandler> logger)
         {
             _next = next;
             _logger = logger;
@@ -32,12 +32,12 @@ namespace TraineeManagement.api.Middleware
                             break;
 
                         case StatusCodes.Status403Forbidden:
-                            _logger.LogError("ERROR: User tried to log in but failed (Forbidden).");
+                            _logger.LogCritical("ERROR: User tried to log in but failed (Forbidden).");
                             await WriteErrorResponse(context, "Forbidden Action", StatusCodes.Status403Forbidden, "You are forbidden to access the resource.");
                             break;
 
                         case StatusCodes.Status404NotFound:
-                            _logger.LogError("ERROR: Invalid Resource Requested");
+                            _logger.LogCritical("ERROR: Invalid Resource Requested");
                             await WriteErrorResponse(context, "Resource Not Found", StatusCodes.Status404NotFound, "Invalid Resource Found.");
                             break;
                     }

@@ -18,7 +18,6 @@ namespace TraineeManagement.api.HttpClientFactory
         {
             try
             {
-                // Appends "api/Trainee/1" to the BaseAddress
                 var response = await _httpClient.GetAsync($"api/Trainee/{id}", cancellationToken);
 
                 if (!response.IsSuccessStatusCode)

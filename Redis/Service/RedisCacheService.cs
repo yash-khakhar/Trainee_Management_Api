@@ -19,24 +19,30 @@ namespace TraineeManagement.api.Redis.Service
 
         public async Task<T?> GetItem<T>(string cacheKey)
         {
+            string? cachedData;
             try
             {
-
-                string? cachedData = await _cache.GetStringAsync(cacheKey);
-
+                cachedData = await _cache.GetStringAsync(cacheKey);
                 if (string.IsNullOrEmpty(cachedData))
                 {
                     return default;
                 }
-
-                return JsonSerializer.Deserialize<T>(cachedData);
-
             }
             catch (Exception ex)
             {
+                _logger.LogWarning(ex, "Redis is offline or timed out while getting key '{CacheKey}'. Falling back to database.", cacheKey);
+                return default;
+            }
 
-                _logger.LogWarning(ex, "Redis is offline or timed out. Returning null to force DB fallback.");
-
+            // Deserializing OUTSIDE the try-catch for Redis, 
+            // so a bad JSON payload doesn't falsely report a Redis outage.
+            try
+            {
+                return JsonSerializer.Deserialize<T>(cachedData);
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Failed to deserialize cache data for key '{CacheKey}'.", cacheKey);
                 return default;
             }
 
@@ -52,7 +58,7 @@ namespace TraineeManagement.api.Redis.Service
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Redis is offline or timed out. Returning null to force DB fallback.");
+                _logger.LogWarning(ex, "Redis is offline or timed out while removing key '{Key}'.", key);
             }
 
         }
@@ -74,7 +80,7 @@ namespace TraineeManagement.api.Redis.Service
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Redis is offline or timed out. Returning null to force DB fallback.");
+                _logger.LogWarning(ex, "Redis is offline or timed out while setting key '{CacheKey}'. Data was not cached.", cacheKey);
             }
 
 

@@ -7,7 +7,6 @@ using TraineeManagement.api.Repository.Review;
 namespace TraineeManagement.api.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
     [ApiController]
     public class ReviewController : ControllerBase
     {
@@ -21,6 +20,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
         public async Task<IActionResult> GetAllReviews()
         {
             IEnumerable<ReviewResponse> reviewList = await _reviewService.GetReviewList();
@@ -29,6 +29,7 @@ namespace TraineeManagement.api.Controllers
 
 
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}, {nameof(UserRolesEnum.TRAINEE)}")]
         public async Task<IActionResult> GetReviewById(int id)
         {
 
@@ -40,6 +41,7 @@ namespace TraineeManagement.api.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> AddReview([FromBody] CreateReviewRequest reviewRequest)
         {
             if (reviewRequest == null) throw new Exception("Invalid Data Input");
