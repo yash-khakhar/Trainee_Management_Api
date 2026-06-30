@@ -5,7 +5,7 @@ namespace TraineeManagement.api.DTO.MentorDto
 {
     public class UpdateMentorRequest
     {
- 
+
         [StringLength(50, ErrorMessage = "First Name cannot be more than 50 characters")]
         public string? FirstName { get; set; }
 

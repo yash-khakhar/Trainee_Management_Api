@@ -2,6 +2,7 @@
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.MentorDto;
+using TraineeManagement.api.Helper;
 using TraineeManagement.api.Models;
 using TraineeManagement.api.Repository.Mentor;
 
@@ -18,6 +19,26 @@ namespace TraineeManagement.api.Services
 
         public async Task<MentorResponse> AddMentor(CreateMentorRequest mentor)
         {
+
+            if(!mentor.FirstName.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper FirstName");
+            }
+
+            if (!mentor.LastName.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper LastName");
+            }
+
+            if (!mentor.Email.IsValidEmail())
+            {
+                throw new InvalidRequest("Enter Proper Email Address");
+            }
+
+            if (!mentor.Expertise.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper Expertise");
+            }
 
             MentorModel mentorModel = new MentorModel(
                     mentor.FirstName.ToLower(),
@@ -70,15 +91,51 @@ namespace TraineeManagement.api.Services
             MentorModel? mentor = await _context.Mentor.FindAsync(id);
             if (mentor == null) throw new NotFoundException("Mentor Not Found");
 
-            if (updateMentorRequest.FirstName != null) mentor.FirstName = updateMentorRequest.FirstName;
+            if (updateMentorRequest.FirstName != null)
+            {
 
-            if (updateMentorRequest.LastName != null) mentor.LastName = updateMentorRequest.LastName;
+                if (!mentor.FirstName.IsOnlyLetters())
+                {
+                    throw new InvalidRequest("Enter Proper FirstName");
+                }
 
-            if (updateMentorRequest.Email != null) mentor.Email = updateMentorRequest.Email;
+                mentor.FirstName = updateMentorRequest.FirstName;
+            }
+
+            if (updateMentorRequest.LastName != null)
+            {
+
+                if (!mentor.LastName.IsOnlyLetters())
+                {
+                    throw new InvalidRequest("Enter Proper LastName");
+                }
+
+                mentor.LastName = updateMentorRequest.LastName;
+            }
+
+            if (updateMentorRequest.Email != null)
+            {
+
+                if (!mentor.Email.IsValidEmail())
+                {
+                    throw new InvalidRequest("Enter Proper Email Address");
+                }
+
+                mentor.Email = updateMentorRequest.Email;
+            }
 
             mentor.Status = updateMentorRequest.Status;
 
-            if (updateMentorRequest.Expertise != null) mentor.Expertise = updateMentorRequest.Expertise;
+            if (updateMentorRequest.Expertise != null)
+            {
+
+                if (!mentor.Expertise.IsOnlyLetters())
+                {
+                    throw new InvalidRequest("Enter Proper Expertise");
+                }
+
+                mentor.Expertise = updateMentorRequest.Expertise;
+            }
 
             mentor.UpdatedAt = DateTime.UtcNow;
 

@@ -5,13 +5,13 @@ namespace TraineeManagement.api.DTO.SubmissionDto
 {
     public class CreateSubmissionRequest
     {
-        [Required]
+        [Required(ErrorMessage = "Task Assignment Id is Required")]
         public int TaskAssignmentId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Submission Url is Required")]
         public string SubmissionUrl { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "Notes is Required")]
         public required string Notes { get; set; }
 
         [Required]

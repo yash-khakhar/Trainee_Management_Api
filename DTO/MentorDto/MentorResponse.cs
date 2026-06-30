@@ -23,7 +23,7 @@ namespace TraineeManagement.api.DTO.MentorDto
         public string LastName { get; set; } = String.Empty;
         public string Email { get; set; } = string.Empty;
         public string Expertise { get; set; } = string.Empty;
-        public MentorStatusEnum Status { get; set; }
+        public MentorStatusEnum Status { get; set; } = MentorStatusEnum.INACTIVE;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

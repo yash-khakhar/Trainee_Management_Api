@@ -54,6 +54,11 @@ namespace TraineeManagement.api.Services
         public async Task<UserLoginResponse> Login(UserLoginRequestDto userDto)
         {
 
+            if (!userDto.UserName.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Invalid Username");
+            }
+
             UserModel user = await FindByUsername(userDto.UserName);
 
             if (!await _passwordService.VerifyPassword(userDto.Password, user))
@@ -73,6 +78,32 @@ namespace TraineeManagement.api.Services
 
         public async Task<UserResponse> RegisterUser(CreateUserRequest newUser)
         {
+
+            if (!newUser.Username.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Invalid Username");
+            }
+
+            if (!newUser.FirstName.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper FirstName");
+            }
+
+            if (!newUser.LastName.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper LastName");
+            }
+
+            if (!newUser.Email.IsValidEmail())
+            {
+                throw new InvalidRequest("Invalid Email Address");
+            }
+
+            if (!newUser.TechStack.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper Tech Stack");
+            }
+
             if (await isUserPresent(newUser.Username))
             {
                 throw new DuplicateUsernameException($"The username '{newUser.Username}' is already taken.");

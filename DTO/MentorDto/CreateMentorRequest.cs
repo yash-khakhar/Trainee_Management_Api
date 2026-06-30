@@ -14,23 +14,23 @@ namespace TraineeManagement.api.DTO.MentorDto
             Expertise = expertise;
             Status = status;
         }
-        
+
         [Required]
         [StringLength(50, ErrorMessage = "First Name cannot be more than 50 characters")]
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
         [Required]
         [StringLength(50, ErrorMessage = "Last Name cannot be more than 50 characters")]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress(ErrorMessage = "Invalid Email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Expertise must be provided")]
-        public string Expertise { get; set; }
+        public string Expertise { get; set; } = string.Empty;
 
         [EnumDataType(typeof(MentorStatusEnum), ErrorMessage = "Status can be either ACTIVE or INACTIVE")]
-        public MentorStatusEnum Status { get; set; }
+        public MentorStatusEnum Status { get; set; } = MentorStatusEnum.INACTIVE;
     }
 }

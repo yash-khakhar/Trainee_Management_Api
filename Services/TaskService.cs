@@ -3,6 +3,7 @@ using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.Task;
 using TraineeManagement.api.Enum;
+using TraineeManagement.api.Helper;
 using TraineeManagement.api.Models;
 using TraineeManagement.api.Repository.Task;
 
@@ -19,6 +20,17 @@ namespace TraineeManagement.api.Services
 
         public async Task<TaskResponse> AddTask(CreateTaskRequest task)
         {
+
+            if (!task.Title.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper Task Title");
+            }
+
+            if (!task.ExpectedTechStack.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper Tech Stack");
+            }
+
             TaskModel taskModel = new TaskModel(
                     task.Title.ToLower(),
                     task.Description.ToLower(),
@@ -69,11 +81,28 @@ namespace TraineeManagement.api.Services
             TaskModel? task = await _context.Task.FindAsync(id);
             if (task == null) throw new NotFoundException("Task Not Found");
 
-            if (taskRequest.Title != null) task.Title = taskRequest.Title;
+            if (taskRequest.Title != null)
+            {
+                
+                if (!task.Title.IsOnlyLetters())
+                {
+                    throw new InvalidRequest("Enter Proper Task Title");
+                }
+
+                task.Title = taskRequest.Title;
+            }
 
             if (taskRequest.Description != null) task.Description = taskRequest.Description;
 
-            if (taskRequest.ExpectedTechStack != null) task.ExpectedTechStack = taskRequest.ExpectedTechStack;
+            if (taskRequest.ExpectedTechStack != null)
+            {
+                if (!task.ExpectedTechStack.IsOnlyLetters())
+                {
+                    throw new InvalidRequest("Enter Proper Tech Stack");
+                }
+
+                task.ExpectedTechStack = taskRequest.ExpectedTechStack;
+            }
 
             if (taskRequest.Status != null) task.Status = (TaskStatusEnum)taskRequest.Status;
 

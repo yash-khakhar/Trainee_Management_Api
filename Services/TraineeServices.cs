@@ -3,6 +3,7 @@ using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.TraineeDto;
 using TraineeManagement.api.Enum;
+using TraineeManagement.api.Helper;
 using TraineeManagement.api.models;
 using TraineeManagement.api.Redis.CacheKeys;
 using TraineeManagement.api.Redis.Repository;
@@ -36,7 +37,28 @@ namespace TraineeManagement.api.Services
 
         public async Task<TraineeResponse> AddTrainee(CreateTraineeRequest trainee)
         {
-            if (trainee.Status == null) throw new InvalidRequest("Invalid Request");
+            if (trainee.Status == null) throw new InvalidRequest("Enter Proper Trainee Details.");
+
+            if (!trainee.FirstName.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper FirstName");
+            }
+
+            if (!trainee.LastName.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper LastName");
+            }
+
+            if (!trainee.Email.IsValidEmail())
+            {
+                throw new InvalidRequest("Enter Proper Email Address");
+            }
+
+            if (!trainee.TechStack.IsOnlyLetters())
+            {
+                throw new InvalidRequest("Enter Proper Tech Stack");
+            }
+
 
             TraineeModel traineeModel = new TraineeModel(
                     trainee.FirstName.ToLower(), 
@@ -155,15 +177,51 @@ namespace TraineeManagement.api.Services
         {
             var trainee = await FindTraineeById(updateTraineeRequest.Id);
 
-            if (updateTraineeRequest.FirstName != null) trainee.FirstName = updateTraineeRequest.FirstName;
+            if (updateTraineeRequest.FirstName != null)
+            {
 
-            if (updateTraineeRequest.LastName != null) trainee.LastName = updateTraineeRequest.LastName;
+                if (!trainee.FirstName.IsOnlyLetters())
+                {
+                    throw new InvalidRequest("Enter Proper FirstName");
+                }
 
-            if (updateTraineeRequest.Email != null) trainee.Email = updateTraineeRequest.Email;
+                trainee.FirstName = updateTraineeRequest.FirstName;
+            }
+
+            if (updateTraineeRequest.LastName != null)
+            {
+
+                if (!trainee.LastName.IsOnlyLetters())
+                {
+                    throw new InvalidRequest("Enter Proper LastName");
+                }
+
+                trainee.LastName = updateTraineeRequest.LastName;
+            }
+
+            if (updateTraineeRequest.Email != null)
+            {
+
+                if (!trainee.Email.IsValidEmail())
+                {
+                    throw new InvalidRequest("Enter Proper Email Address");
+                }
+
+                trainee.Email = updateTraineeRequest.Email;
+            }
 
             trainee.Status = (TraineeStatusEnum)updateTraineeRequest.Status;
 
-            if (updateTraineeRequest.TechStack != null) trainee.TechStack = updateTraineeRequest.TechStack;
+            if (updateTraineeRequest.TechStack != null)
+            {
+
+                if (!trainee.TechStack.IsOnlyLetters())
+                {
+                    throw new InvalidRequest("Enter Proper Tech Stack");
+                }
+
+                trainee.TechStack = updateTraineeRequest.TechStack;
+            }
 
             trainee.UpdatedAt = DateTime.UtcNow;
 

@@ -5,16 +5,15 @@ namespace TraineeManagement.api.DTO.ReviewDto
 {
     public class CreateReviewRequest
     {
-        [Required]
+        [Required(ErrorMessage = "Submission Id is Required")]
         public int SubmissionId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Mentor Id is Required")]
         public int MentorId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Feedback is Required")]
         public required string Feedback { get; set; }
 
-        [Required]
         public int Score { get; set; } = 0;
 
         [Required]
