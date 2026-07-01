@@ -9,9 +9,6 @@ x86/
 [Oo]bj/
 [Cc]ache/
 
-appsettings.Production.json
-appsettings.Development.json
-appsettings.json
 *.pem
 *.pfx
 *.publishsettings
@@ -41,9 +38,6 @@ packages/
 project.lock.json
 project.fragment.lock.json
 
-# Node modules (Only if your Web API shares a directory with a frontend SPA framework)
-node_modules/
-
 .DS_Store
 Thumbs.db
 *.swp
@@ -52,4 +46,4 @@ log.txt
 *.log
 
 Migrations/
-appsettings.json
+appsettings.Development.json
