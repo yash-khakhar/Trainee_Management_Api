@@ -50,8 +50,9 @@ The entire ecosystem is containerized. Users only need to interface with the Gat
    git clone <repository-url>
    cd TraineeManagement  
 
-   1. Spin up the Ecosystem: **`docker-compose up -d --build`**.  
-   2. Verify Services are Running: **`docker compose ps`**.  
+   1. Spin up the Ecosystem: `docker-compose up -d --build`.  
+   2. Verify Services are Running: `docker compose ps`.  
+   ```
 
 ### 💻 Local Development Setup (Without Docker)  
 If you wish to run the main API project locally outside of containers:  
