@@ -41,7 +41,7 @@ namespace TraineeManagement.api.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> AddReview([FromBody] CreateReviewRequest reviewRequest)
         {
             if (reviewRequest == null) throw new Exception("Invalid Data Input");

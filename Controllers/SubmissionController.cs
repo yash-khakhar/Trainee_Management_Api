@@ -21,7 +21,7 @@ namespace TraineeManagement.api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
+        [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
         public async Task<IActionResult> GetAllSubmissions()
         {
             IEnumerable<SubmissionResponse> submissionList = await _submissionService.GetSubmissionList();
