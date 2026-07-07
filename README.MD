@@ -1,10 +1,48 @@
-# ProjectName: TraineeManagement.api (ASP.NET Core Web API Project)
+# TraineeManagement System  
+A scalable, containerized backend system for managing trainees, mentors, learning tasks, and file submissions. The application utilizes an API Gateway for centralized authentication, Redis for caching, and RabbitMQ for asynchronous background processing.
 
-## Technology Used
-C# And ASP.NET CORE  
+## 🛠 Architecture & Tech Stack  
+* **Framework:** C# and ASP.NET Core 10.0
+* **API Gateway:** `TraineeManagementGateway.api` (Port `5000` - Central entry point)
+* **Database:** MySQL with Entity Framework Core ORM
+* **Caching:** Redis (Cache layer for highly requested data)
+* **Message Broker:** RabbitMQ (Asynchronous background message processing)
+* **Background Worker:** `TraineeManagement.WorkerService` (Consumes submission tasks)
+* **Internal Service:** `TrainingDirectory.Api` (Dummy service used for inter-service HTTP communication)  
 
-## Database Used  
-MYSQL DB with Entity Framework ORM  
+## System Architecture Diagram  
+
+                        [ Client Requests ]
+                                │
+                                ▼ (Port 5000)
+                     ┌─────────────────────┐
+                     │     Auth Gateway    │ (Handles JWT Auth & Routing)
+                     └──────────┬──────────┘
+                                │
+                                ▼
+                     ┌─────────────────────┐       ┌───────────────┐
+                     │ TraineeManagement   │ ◄───► │  Redis Cache  │ (Fast Reads)
+                     │        .api         │       └───────────────┘
+                     └────┬────────────┬───┘
+                          │            │
+      (Async File Tasks)  │            │ (Inter-Service HttpClient)
+                          ▼            ▼
+                   ┌────────────┐    ┌─────────────────────┐
+                   │  RabbitMQ  │    │ Dummy Trainee Service│
+                   └─────┬──────┘    └─────────────────────┘
+                         │
+                         ▼
+                   ┌────────────┐       ┌───────────────┐
+                   │ RabbitMQ   │ ◄───► │   MySQL DB    │ (Persistent Storage)
+                   │  Consumer  │       └───────────────┘
+                   └────────────┘
+
+## 🚀 Getting Started (Docker Compose - Recommended)  
+The entire ecosystem is containerized. Users only need to interface with the Gateway URL: **`http://localhost:5000`**.
+
+### Prerequisites
+* [Docker Desktop](https://www.docker.com/products/docker-desktop) installed.
+* Git installed to clone the repository.  
 
 ## Backend setup steps  
 step1: Clone the repo  git  
