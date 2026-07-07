@@ -20,4 +20,5 @@ RUN dotnet publish TraineeManagement.api/TraineeManagement.api.csproj \
 FROM docker-registry-002.zeuslearning.com/zeuslearning/vscode/devcontainers/dotnet
 WORKDIR /App
 COPY --from=build /App/out .
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "TraineeManagement.api.dll"]
