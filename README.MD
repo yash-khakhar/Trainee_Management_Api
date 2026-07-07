@@ -56,9 +56,16 @@ The entire ecosystem is containerized. Users only need to interface with the Gat
 
 ### 💻 Local Development Setup (Without Docker)  
 If you wish to run the main API project locally outside of containers:  
-1. MySQL & Redis Setup:  
+1. MySQL, Redis & RabbitMQ Setup:  
 * Install MySQL Database and MySQL Workbench locally. Ensure you configure your root password as 1234 and create a schema named trainee_management_db (or match your local appsettings.json).  
-* Install Redis locally on port 6379.
+* Install Redis locally on port 6379.  
+* Install RabbitMQ locally on port 5672.  
+
+2. Install Required Packages  
+Run this command inside your project directories where required:  
+```bash  
+1. dotnet add package MySql.EntityFrameworkCore --version 10.0.7  
+```  
 
 ## Backend setup steps  
 step1: Clone the repo  git  
