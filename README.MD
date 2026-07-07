@@ -44,6 +44,21 @@ The entire ecosystem is containerized. Users only need to interface with the Gat
 * [Docker Desktop](https://www.docker.com/products/docker-desktop) installed.
 * Git installed to clone the repository.  
 
+### Quick Start Steps
+1. **Clone the Repository:**
+   ```bash
+   git clone <repository-url>
+   cd TraineeManagement  
+
+   1. Spin up the Ecosystem: **`docker-compose up -d --build`**.  
+   2. Verify Services are Running: **`docker compose ps`**.  
+
+### 💻 Local Development Setup (Without Docker)  
+If you wish to run the main API project locally outside of containers:  
+1. MySQL & Redis Setup:  
+* Install MySQL Database and MySQL Workbench locally. Ensure you configure your root password as 1234 and create a schema named trainee_management_db (or match your local appsettings.json).  
+* Install Redis locally on port 6379.
+
 ## Backend setup steps  
 step1: Clone the repo  git  
 step2: Open Project in visual studio IDE  
