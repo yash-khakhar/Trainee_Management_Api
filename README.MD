@@ -64,131 +64,64 @@ If you wish to run the main API project locally outside of containers:
 2. Install Required Packages  
 Run this command inside your project directories where required:  
 ```bash  
-1. dotnet add package MySql.EntityFrameworkCore --version 10.0.7  
+1. dotnet restore   
 ```  
 
-## Backend setup steps  
-step1: Clone the repo  git  
-step2: Open Project in visual studio IDE  
-step3: Run following commands for database migration .NET CLI  
-    command 1: Add-Migration InitialMySQL    
-    command 2: update-database  
-step4: click on Run application  
-
-## MySQL Setup Steps  
--> Download mysql database and mysql workbench for viewing database using user interface.  
--> While installing mysql database, you will be prompted to enter username and password. Make sure you remember these database crendials which will be helpful in connecting database with application.  
--> For mysql database, you need to install following dotnet packages:  
-package: dotnet add package MySql.EntityFrameworkCore --version 10.0.7  
-
 ## EF Core Migration commands  
--> Add-Migration [Migration_Name]  
--> update-database  
+Run this command inside your project directories where required:  
+```bash  
+1. Add-Migration [Migration_Name]  
+2. update-database  
+```
 
 ## Login Credentials  
 -> First you need to register user as admin/trainee/mentor for testing the system.  
 -> you can use /api/Auth/register api for adding user.  
 
-## API LIST For Trainee  
-1. [GET] /api/Trainee  
+## 🛣 API Endpoints (Accessed via http://localhost:5000)  
 
-2. [GET] /api/Trainee?searchKeyword=string  
-      
-3. [POST] /api/Trainee    
-  
-4. [PUT] /api/Trainee    
-  
-5. [GET] /api/Trainee/{id}  
-    Request Path Param: id    
-  
-6. [DELETE] /api/Trainee/{id}  
-    Request Path Param: id  
-    Response: 204 No Content  
+## 🔑 Authentication / Identity  
+* [POST] /api/Auth/register - Create a new user account.  
+* [POST] /api/Auth/login - Authenticate and obtain JWT token.  
 
-## API LIST For Users  
-1. [POST] /api/Auth/register  
+## 🎓 Trainee Management  
+* [GET] /api/Trainee - List all trainees (Uses Redis Cache for optimized reads).  
+* [GET] /api/Trainee?searchKeyword={string} - Search trainees.  
+* [GET] /api/Trainee/{id} - Fetch trainee by ID.  
+* [POST] /api/Trainee - Create a trainee profile.  
+* [PUT] /api/Trainee - Update trainee profile details.  
+* [DELETE] /api/Trainee/{id} - Remove a trainee (Returns 204 No Content).  
 
-2. [POST] /api/Auth/login  
-  
-## API LIST For Mentor  
-1. [GET] /api/Mentor   
-  
-2. [POST] /api/Mentor  
-  
-3. [PUT] /api/Trainee/{id}  
-  
-4. [GET] /api/Mentor/{id}  
-    Request Path Param: id  
-  
-5. [DELETE] /api/Trainee/{id}  
-    Request Path Param: id  
-    Response: 204 No Content  
+## 👔 Mentor Management  
+* [GET] /api/Mentor - List all mentors.  
+* [GET] /api/Mentor/{id} - Get mentor by ID.  
+* [POST] /api/Mentor - Create a mentor profile.  
+* [PUT] /api/Trainee/{id} - Update a trainee's details (Mentor Privilege).  
+* [DELETE] /api/Trainee/{id} - Delete a trainee profile (Mentor Privilege).  
 
-## API LIST For Learning Task    
-1. [GET] /api/LearningTask   
-  
-2. [POST] /api/LearningTask  
-  
-3. [PUT] /api/LearningTask/{id}  
-  
-4. [GET] /api/LearningTask/{id}  
-    Request Path Param: id  
-  
-5. [DELETE] /api/LearningTask/{id}  
-    Request Path Param: id  
-    Response: 204 No Content  
+## 📚 Learning Tasks & Assignments  
+* [GET] /api/LearningTask | [GET] /api/LearningTask/{id} - Fetch curriculum tasks.  
+* [POST] /api/LearningTask | [PUT] /api/LearningTask/{id} | [DELETE] /api/LearningTask/{id} - Manage tasks.  
+* [GET] /api/TaskAssignment | [GET] /api/TaskAssignment/{id} - Track assignments.  
+* [POST] /api/TaskAssignment | [PUT] /api/TaskAssignment/{id} - Assign tasks to trainees.  
 
-## API LIST For Task Assignment    
-1. [GET] /api/TaskAssignment   
-  
-2. [POST] /api/TaskAssignment  
-  
-3. [PUT] /api/TaskAssignment/{id}  
-  
-4. [GET] /api/TaskAssignment/{id}  
-    Request Path Param: id  
+## 📥 Submissions & Reviews  
+* [GET] /api/Submission | [GET] /api/Submission/{id} - Fetch submissions.  
+* [POST] /api/Submission - Submit a learning task file (Pushes message payload to RabbitMQ for backend worker processing).  
+* [GET] /api/Review | [GET] /api/Review/{id} - View task reviews.  
+* [POST] /api/Review - Submit review notes/grades for a trainee's task.  
 
-## API LIST For Submission    
-1. [GET] /api/Submissinon   
-  
-2. [POST] /api/Submission  
-  
-3. [GET] /api/Submission/{id}  
-    Request Path Param: id  
+## 🛡 Security & Resilience Implementation  
+1. Gateway Security: The Gateway isolates internal microservices (Dummy Service, Web API) from direct external exposure.  
+2. Password Security: Plaintext passwords are never saved; they are safely salted and hashed before storing in MySQL.  
+3. Global Exception Handling: A centralized middleware captures unexpected exceptions globally, rendering sanitized, uniform error objects without leaking internal stack traces.  
+4. CORS Policies: Configured securely at the Gateway level to permit designated frontend integrations.  
+5. Fault Isolation: Decoupled architecture using RabbitMQ guarantees that spike loads or file-processing failures in the Worker Service won't bring down the core Web API.  
 
-## API LIST For Review      
-1. [GET] /api/Review  
-  
-2. [POST] /api/Review  
-  
-3. [GET] /api/Review/{id}  
-    Request Path Param: id    
-
-## JWT Usage instruction  
--> For accessing any /api/Trainee api, you need jwt token  
--> To get jwt token, you need to login and provide correct username and password.  
--> Login credentials will work if you are registed, if not then you need to register first using /api/Register api.  
-
-## Global Exception Handling  
--> Created centralized exception handling for unexpected errors.  
--> Returning safe, consistent error messages to clients.  
-
-## Security Checklist  
-1. Password is stored as hash in database instead of raw string.    
-2. Api is protected using role-based jwt tokens.  
-3. Cors configuration is done for frontend application  
-4. Global Exception is configured to prevent application to crash from unexpected errors.  
-
-## Known Limitations  
-1. Entire application is using monolith architecture. So, if one service gets unexpected error entire application can be down.  
-2. Secret Key of JWT Token is still used as raw string instead of encrypting the key.  
-3. If jwt token of one user is known to another user, then he can use his token to misuse the role.  
-
-## Next Improvement Areas  
-1. We can develop micro-service architecture. So, all services are isolated from each other.  
-2. We can use queues such as RabbitMQ or Kafka for intraction between two micro services.  
-3. We can encrypt/hash the secret key of jwt token, so it is not exposed to other user in any cases.  
-4. We can also hash/encrypt the jwt token itself instead of sending raw token. So another user can not use token even it is known.  
+## 📈 Next Improvement Areas  
+* Token Protection: Encrypt or double-hash the JWT tokens before transit to mitigate token interception or spoofing.  
+* Distributed Configuration: Move hardcoded environment strings in docker-compose.yml (like JwtSettings__SecretKey) into secure vaults like HashiCorp Vault or Azure Key Vault.  
+* Service Mesh: Implement a comprehensive service registry (e.g., Consul) if inter-service dependencies grow beyond HttpClient bindings.  
 
 ## Challenges Faced
 1. I Faced challenges while creating the api. To overcome challenges i used help of official documentation of .NET Core and C#  
