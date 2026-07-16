@@ -44,15 +44,29 @@ The entire ecosystem is containerized. Users only need to interface with the Gat
 * [Docker Desktop](https://www.docker.com/products/docker-desktop) installed.
 * Git installed to clone the repository.  
 
-### Quick Start Steps
-1. **Clone the Repository:**
-   ```bash
-   git clone <repository-url>
-   cd TraineeManagement  
-
-   1. Spin up the Ecosystem: `docker-compose up -d --build`.  
-   2. Verify Services are Running: `docker compose ps`.  
-   ```
+### Quick Start Steps  
+1. Verify Directory Structure:  
+Before initializing the containers, ensure your workspace layout contains all required service repositories cloned into the following structure:  
+```bash  
+TraineeManagement/
+├── TraineeManagement.api
+├── TraineeManagement.Shared/             # (GitHub Repo: https://github.com/yash-khakhar/TraineeManagement.Shared.git)
+├── TraineeManagement.WorkerService/      # (GitHub Repo: https://github.com/yash-khakhar/TraineeManagement.WorkerService.git)
+├── TraineeManagementGateway.api/         # (GitHub Repo: https://github.com/yash-khakhar/TraineeManagementGateway.Api.git)
+├── TrainingDirectory.Api/                # (GitHub Repo: https://github.com/yash-khakhar/TrainingDirectory.Api.git)
+├── NuGet.Config                          # (File configuration below)
+└── docker-compose.yml                    # (Composition file below)
+```  
+2. Spin up the Ecosystem:  
+Run the setup command from the root directory to download dependencies, build images, and start the system containers:  
+```bash  
+docker-compose up -d --build  
+```  
+3. Verify Services are Running:  
+Confirm that all environment nodes are running correctly:  
+```bash  
+docker compose ps  
+```  
 
 ### 💻 Local Development Setup (Without Docker)  
 If you wish to run the main API project locally outside of containers:  
@@ -128,4 +142,150 @@ Run this command inside your project directories where required:
 References:  
 1. https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-10.0  
 2. https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?view=aspnetcore-10.0  
-3. https://learn.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-10.0
+3. https://learn.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-10.0  
+
+## Docker Compose File Reference  
+```bash  
+version: '3.8'
+
+services:
+  # 1. The MySQL Database Service
+  mysql-db:
+    image: mysql_image_name
+    container_name: mysql_database
+    environment:
+      MYSQL_ROOT_PASSWORD: db_password
+      MYSQL_DATABASE: trainee_management_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+  # 2. The REDIS Service
+  redis-cache:
+    image: redis_image_name
+    container_name: redis_server
+    ports:
+      - "6379:6379"
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # 3. The INTERNAL DUMMY Service
+  dummy-service:
+    image: dummy-trainee-api_image name
+    container_name: dummy_trainee_api-container
+    build:
+      context: ./TrainingDirectory.Api # Directory where the dummy service's Dockerfile lives
+      dockerfile: Dockerfile
+    ports:
+      - "5062:8080"  # Exposed to host for local browser testing, but web-api communicates internally
+    restart: on-failure
+
+  auth-service:
+    image: auth-gateway:latest image name
+    container_name: auth-container
+    build:
+      context: ./TraineeManagementGateway.api 
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+    restart: on-failure
+    environment:
+      #1. JWT Settings
+      - JwtSettings__SecretKey=your_jwt_screat_key
+      - JwtSettings__Issuer=issuer_url (eg: https://localhost:7153)
+      - JwtSettings__Audience=audience_url (eg: https://localhost:5173)
+
+  # 4. MAIN TraineeManagement.api Service
+  web-api:
+    image: trainee-management-api image name
+    container_name: trainee_api
+    build:
+      context: .
+      dockerfile: TraineeManagement.api/Dockerfile
+    
+    volumes:
+      - ./shared-uploads:/App/Uploads/Submissions 
+    depends_on:
+      - mysql-db
+    restart: on-failure
+    environment:
+      # 1. Mysql Db Connection string
+      - ConnectionStrings__DefaultConnection=Server=mysql-db;port=3306;database=trainee_management_db;user=USERNAME;password=PASSWORD;
+
+      #2. Redis Connection string
+      - ConnectionStrings__Redis=redis-cache:6379,abortConnect=false,connectTimeout=2000,syncTimeout=2000,asyncTimeout=2000
+
+      #3. Rabbit Mq connection string
+      - ConnectionStrings__RabbitMq=amqp://guest:guest@rabbitmq:5672/
+      - RabbitMqSettings__Uri=amqp://guest:guest@rabbitmq:5672/
+
+      #4. JWT Settings
+      - JwtSettings__SecretKey=YOUR_JWT_SECRET_KEY
+      - JwtSettings__Issuer=https://localhost:7153
+      - JwtSettings__Audience=https://localhost:5173
+
+      #5. File Storage Path
+      - FileStorageSettings__StorageRootPath=Uploads/Submissions
+
+
+  # 5. RABBITMQ Service
+  rabbitmq:
+    image: rabbitmq_image_name
+    container_name: rabbitmq_broker
+    ports:
+      - "5672:5672"     
+      - "15672:15672"   
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  
+  # 6. RABBITMQ Consumer Service
+  rabbitmq-consumer-service:
+    image: rabbit-mq-consumer:latest image name     
+    container_name: rabbitmq_consumer
+    build:
+      context: .                        
+      dockerfile: TraineeManagement.WorkerService/Dockerfile 
+    environment:
+      - FileStorageSettings__StorageRootPath=/App/Uploads/Submissions
+      - AppSecrets__DatabaseUrl=Server=mysql-db;port=3306;database=trainee_management_db;user=USERNAME;password=PASSWORD;
+    volumes:
+      - ./shared-uploads:/App/Uploads/Submissions
+    depends_on:
+      rabbitmq:
+        condition: service_healthy       
+    restart: on-failure
+
+volumes:
+  mysql_data:  
+```  
+
+## Nuget.config File Reference  
+```bash  
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <clear />
+    <add key="CodeArtifactName" value="nuget_index.json_file" />
+  </packageSources>
+  <packageSourceCredentials>
+    <ZeusCodeArtifact>
+      <add key="Username" value="aws" />
+      <add key="ClearTextPassword" value="AWS_TOKEN" />
+    </ZeusCodeArtifact>
+  </packageSourceCredentials>
+</configuration>
+```
