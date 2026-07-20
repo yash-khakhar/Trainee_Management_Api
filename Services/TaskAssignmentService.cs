@@ -28,6 +28,11 @@ namespace TraineeManagement.api.Services
                 .Select(t => t.DueDate)
                 .FirstOrDefaultAsync();
 
+            if(dueDate == default)
+            {
+                throw new NotFoundException("Task not found!");
+            }
+
             if(dueDate < taskAssignment.AssignedDate)
             {
                 throw new Exception("Task Due Date cannot be before Assigned Date!");
