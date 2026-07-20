@@ -53,9 +53,15 @@ namespace TraineeManagement.api.Services
         public async Task<SubmissionResponse> AddSubmission(CreateSubmissionRequest submissionRequest, List<IFormFile> files, string correlationId)
         {
 
-            DateTime dueDate = await _context.TaskAssignment
+            DateTime? dueDate = await _context.TaskAssignment
                 .Where(t => t.Id == submissionRequest.TaskAssignmentId)
                 .Select(t => t.DueDate).FirstOrDefaultAsync();
+
+            if(dueDate == null)
+            {
+                throw new NotFoundException("Invalid Task Assignment id provided");
+            }
+            
 
             if (submissionRequest.SubmittedDate > dueDate) throw new Exception("You cannot submit task after due date!");
 
