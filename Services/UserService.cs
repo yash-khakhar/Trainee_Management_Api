@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.UserDto;
@@ -41,7 +42,7 @@ namespace TraineeManagement.api.Services
         private async Task<UserModel> FindByUsername(string userName)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName.Equals(userName));
-            if (user == null) throw new InvalidRequest("Invalid username or password");
+            if (user == null) throw new NotFoundException("Invalid username or password");
             return user;
         }
 
