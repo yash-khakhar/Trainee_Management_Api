@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TraineeManagement.api.CustomException;
 using TraineeManagement.api.DTO.TaskAssignmentDto;
 using TraineeManagement.api.Enum;
 using TraineeManagement.api.Repository.TaskAssignment;
@@ -33,7 +34,7 @@ namespace TraineeManagement.api.Controllers
         public async Task<IActionResult> GetTaskAssignmentById(int id)
         {
 
-            if (id <= 0) throw new Exception("Invalid Data Input"); 
+            if (id <= 0) throw new InvalidRequest("Invalid Data Input"); 
 
             TaskAssignmentResponse task = await _taskAssignmentService.GetTaskAssignmentById(id);
             return Ok(task);
@@ -44,7 +45,7 @@ namespace TraineeManagement.api.Controllers
         [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> AddTaskAssignment([FromBody] CreateTaskAssignmentRequest taskRequest)
         {
-            if (taskRequest == null) throw new Exception("Invalid Data Input");
+            if (taskRequest == null) throw new InvalidRequest("Invalid Data Input");
 
             TaskAssignmentResponse task = await _taskAssignmentService.AddTaskAssignment(taskRequest);
             _logger.LogInformation($"NEW TASK Assignment ADDED");
@@ -56,7 +57,7 @@ namespace TraineeManagement.api.Controllers
         [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}, {nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> UpdateTaskAssignment(int id, [FromBody] UpdateTaskAssignmentRequest taskRequest)
         {
-            if (taskRequest == null) throw new Exception("Invalid Data Input");
+            if (taskRequest == null) throw new InvalidRequest("Invalid Data Input");
 
             TaskAssignmentResponse task = await _taskAssignmentService.UpdateTaskAssignment(id, taskRequest);
             _logger.LogInformation($"TASK Assignment UPDATED");

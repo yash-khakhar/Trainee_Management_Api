@@ -65,7 +65,7 @@ namespace TraineeManagement.api.Controllers
         [Authorize(Roles = $"{nameof(UserRolesEnum.ADMIN)}")]
         public async Task<IActionResult> DeleteMentor(int id)
         {
-            bool isMentorDeleted = await _mentorService.DeleteMentorById(id);
+            await _mentorService.DeleteMentorById(id);
 
             _logger.LogInformation($"MENTOR DELETED: Mentor Id: {id}");
 

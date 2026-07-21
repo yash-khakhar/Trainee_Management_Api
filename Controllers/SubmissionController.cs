@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TraineeManagement.api.CustomException;
 using TraineeManagement.api.DTO.SubmissionDto;
 using TraineeManagement.api.Enum;
 using TraineeManagement.api.Repository.Submission;
@@ -34,7 +35,7 @@ namespace TraineeManagement.api.Controllers
         public async Task<IActionResult> GetSubmissionById(int id)
         {
 
-            if (id <= 0) throw new Exception("Invalid Data Input");
+            if (id <= 0) throw new InvalidRequest("Invalid Data Input");
 
             SubmissionResponse submission = await _submissionService.GetSubmissionById(id);
             return Ok(submission);
@@ -45,7 +46,7 @@ namespace TraineeManagement.api.Controllers
         [Authorize(Roles = $"{nameof(UserRolesEnum.TRAINEE)}")]
         public async Task<IActionResult> AddSubmission([FromForm] CreateSubmissionRequest submissionRequest, List<IFormFile> files)
         {
-            if (submissionRequest == null) throw new Exception("Invalid Data Input");
+            if (submissionRequest == null) throw new InvalidRequest("Invalid Data Input");
 
             var CorrelationId = Activity.Current?.RootId
                               ?? HttpContext.TraceIdentifier;

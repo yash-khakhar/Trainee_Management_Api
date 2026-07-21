@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TraineeManagement.api.CustomException;
 using TraineeManagement.api.DTO.ReviewDto;
 using TraineeManagement.api.Enum;
 using TraineeManagement.api.Repository.Review;
@@ -33,7 +34,7 @@ namespace TraineeManagement.api.Controllers
         public async Task<IActionResult> GetReviewById(int id)
         {
 
-            if (id <= 0) throw new Exception("Invalid Data Input");
+            if (id <= 0) throw new InvalidRequest("Invalid Data Input");
 
             ReviewResponse review = await _reviewService.GetReviewById(id);
             return Ok(review);
@@ -44,7 +45,7 @@ namespace TraineeManagement.api.Controllers
         [Authorize(Roles = $"{nameof(UserRolesEnum.MENTOR)}")]
         public async Task<IActionResult> AddReview([FromBody] CreateReviewRequest reviewRequest)
         {
-            if (reviewRequest == null) throw new Exception("Invalid Data Input");
+            if (reviewRequest == null) throw new InvalidRequest("Invalid Data Input");
 
             ReviewResponse review = await _reviewService.AddReview(reviewRequest);
             _logger.LogInformation($"NEW Review ADDED");

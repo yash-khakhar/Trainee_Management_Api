@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using TraineeManagement.api.CustomException;
 using TraineeManagement.api.Data;
 using TraineeManagement.api.DTO.TraineeDto;
@@ -28,7 +29,7 @@ namespace TraineeManagement.api.Services
         {
 
             TraineeModel? trainee = await _context.Trainees.FindAsync(id);
-            if (trainee == null) throw new Exception("Trainee Not Found");
+            if (trainee == null) throw new NotFoundException("Trainee Not Found");
             else
             {
                 return trainee;

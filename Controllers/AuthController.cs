@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TraineeManagement.api.CustomException;
 using TraineeManagement.api.DTO.UserDto;
 using TraineeManagement.api.Repository.User;
 
@@ -22,7 +23,7 @@ namespace TraineeManagement.api.Controllers
         {
             if (user == null)
             {
-                throw new Exception("Please Provide Correct Input Data");
+                throw new InvalidRequest("Please Provide Correct Input Data");
             }
 
             UserResponse userResponse = await _userService.RegisterUser(user);
@@ -38,7 +39,7 @@ namespace TraineeManagement.api.Controllers
             if (user == null)
             {
                 _logger.LogInformation($"ERROR: Exception in User Login: Invalid Credentials");
-                throw new Exception("Invalid Credentails");
+                throw new InvalidRequest("Invalid Credentails");
             }
 
             var userLoginResponse = await _userService.Login(user);

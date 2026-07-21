@@ -35,7 +35,7 @@ namespace TraineeManagement.api.Services
 
             if(dueDate < taskAssignment.AssignedDate)
             {
-                throw new Exception("Task Due Date cannot be before Assigned Date!");
+                throw new InvalidRequest("Task Due Date cannot be before Assigned Date!");
             }
 
             TaskAssignmentModel taskAssignmentModel = new TaskAssignmentModel(

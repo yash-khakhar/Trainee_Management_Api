@@ -59,13 +59,12 @@ namespace TraineeManagement.api.Services
 
             if(dueDate == null)
             {
-                throw new NotFoundException("Invalid Task Assignment id provided");
+                throw new NotFoundException("Task Assignment not found");
             }
             
 
-            if (submissionRequest.SubmittedDate > dueDate) throw new Exception("You cannot submit task after due date!");
+            if (submissionRequest.SubmittedDate > dueDate) throw new InvalidRequest("You cannot submit task after due date!");
 
-            //fetching or generating correlation id
             //var correlationId = _httpContextAccessor.HttpContext?.Request.Headers["X-Correlation-ID"].ToString();
             if (string.IsNullOrEmpty(correlationId))
             {

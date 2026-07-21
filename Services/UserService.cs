@@ -41,7 +41,7 @@ namespace TraineeManagement.api.Services
         private async Task<UserModel> FindByUsername(string userName)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName.Equals(userName));
-            if (user == null) throw new Exception("Invalid username or password");
+            if (user == null) throw new InvalidRequest("Invalid username or password");
             return user;
         }
 
